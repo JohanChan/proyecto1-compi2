@@ -31,6 +31,7 @@ caracter (\'({escape2}|{acepta2})\')
 "++"                 { console.log("Reconocio : "+ yytext); return 'INCRE'}
 "--"                 { console.log("Reconocio : "+ yytext); return 'DECRE'}
 "+"                  { console.log("Reconocio : "+ yytext); return 'MAS'}
+"%"                  { console.log("Reconocio : "+ yytext); return 'MOD'}
 "("                  { console.log("Reconocio : "+ yytext); return 'PARA'}
 ")"                  { console.log("Reconocio : "+ yytext); return 'PARC'}
 "["                  { console.log("Reconocio : "+ yytext); return 'CORA'}
@@ -138,7 +139,7 @@ caracter (\'({escape2}|{acepta2})\')
 %left 'INTERRC'
 %left 'OR'
 %left 'AND'
-%right 'NOT'
+%right 'UNOT'
 %left 'COMPARAR' 'DIFERENTE' 'MENORQ' 'MENORIGUAL' 'MAYORQ' 'MAYORIGUAL'
 %left 'MAS' 'MENOS'
 %left 'DIV' 'MULTI' 'MOD'
@@ -158,6 +159,15 @@ instrucciones:  instrucciones instruccion
 
 instruccion:    declaracion PYC
             |   asignacion PYC
+            |   imprimir PYC
+            |   if_instr
+            |   switch_instr
+            |   while_instr
+            |   dowhile_instr PYC
+            |   for_instr
+            |   break_instr PYC
+            |   continue_instr PYC
+            |   funcion_instr
             ;
 
 declaracion:    tipo ListaId
@@ -178,7 +188,68 @@ tipo:           INT
 asignacion:     IDENTIFICADOR IGUAL expresion
             ;
 
-expresion:      DECIMAL
+imprimir:       PRINT PARA expresion PARC
+            |   PRINTLN PARA expresion PARC
+            ;
+
+if:             IF PARA expresion PARC LLAVEA instrucciones LLAVEC
+            |   IF PARA expresion PARC instruccion 
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE LLAVEA instrucciones LLAVEC
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC elseif_instr
+            ;
+
+elseif_instr:   ELSEIF PARA expresion PARC LLAVEA instrucciones LLAVEC
+            |   ELSEIF PARA expresion PARC LLAVEA instrucciones LLAVEC elseif_instr
+            |   ELSEIF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instrucciones
+            ;
+
+switch_instr:   SWITCH PARA expresion PARC LLAVEA listaCases default_instr LLAVEC   
+            |   SWITCH PARA expresion PARC LLAVEA listaCases LLAVEC       
+            |   SWITCH PARA expresion PARC LLAVEA def LLAVEC             
+            ;
+
+listaCases:     listaCases CASE expresion DOSP instrucciones 
+            |   CASE expresion DOSP instrucciones              
+            ;
+
+default_instr:  DEFAULT DOSP instrucciones
+            ;
+
+while_instr:    WHILE PARA expresion PARC LLAVEA instrucciones LLAVEC
+            ;
+
+dowhile_instr:  LLAVEA instrucciones LLAVEC WHILE PARA expresion PARC
+            ;
+
+for:            FOR IDENTIFICADOR IN expresion LLAVEA instrucciones LLAVEC
+            |   FOR PARA declaracion PYC expresion PYC expresion PARC LLAVEA instrucciones LLAVEC
+            |   FOR PARA asignacion PYC expresion PYC expresion PARC LLAVEA instrucciones LLAVEC'
+            ;
+
+break_instr:    BREAK
+            ;
+
+continue_instr: CONTINUE
+            ;
+
+
+expresion:      MENOS expresion %prec UNARIO
+            |   NOT expresion %prec UNOT
+            |   expresion MAS expresion
+            |   expresion MENOS expresion
+            |   expresion MULTI expresion
+            |   expresion DIV expresion
+            |   expresion MOD expresion
+            |   expresion MENORQ expresion
+            |   expresion MENORIGUAL expresion
+            |   expresion MAYORQ expresion
+            |   expresion MAYORIGUAL expresion
+            |   expresion IGUALIGUAL expresion
+            |   expresion DIFERENCIA expresion
+            |   expresion AND expresion
+            |   expresion OR expresion
+            |   PARA expresion PARC
+            |   DECIMAL
             |   ENTERO
             |   CADENA
             |   CARACTER
