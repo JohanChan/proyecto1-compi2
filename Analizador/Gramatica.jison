@@ -135,6 +135,7 @@ caracter (\'({escape2}|{acepta2})\')
 %}
 
 /* Precedencia de operadores */
+
 %left 'OR'
 %left 'AND'
 %right 'NOT'
