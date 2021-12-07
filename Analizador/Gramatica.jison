@@ -259,10 +259,10 @@ arreglos_instr: tipo CORA CORC IGUAL CORA lista_expr CORC
             |   tipo CORA CORC IGUAL CORA CORC
             ;
 
-lista_expr:     lista_expr COMA expresion
+/*lista_expr:     lista_expr COMA expresion
             |   expresion;
             ;
-            
+            */
 /* MODIFICACION DE UN ARREGLO */
 modArreglos_instr:  IDENTIFICADOR CORA expresion CORC
             ;
