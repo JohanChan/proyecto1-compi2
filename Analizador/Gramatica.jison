@@ -66,7 +66,6 @@ caracter (\'({escape2}|{acepta2})\')
 "String"            { console.log("Reconocio : "+ yytext); return 'STRING'}
 "if"                { console.log("Reconocio : "+ yytext); return 'IF'}
 "else"              { console.log("Reconocio : "+ yytext); return 'RELSE'}
-"elseif"                { console.log("Reconocio : "+ yytext); return 'ELSEIF'}
 "switch"            { console.log("Reconocio : "+ yytext); return 'SWITCH'}
 "list"              { console.log("Reconocio : "+ yytext); return 'LIST'}
 "new"               { console.log("Reconocio : "+ yytext); return 'NEW'}
@@ -168,6 +167,9 @@ instruccion:    declaracion PYC
             |   break_instr PYC
             |   continue_instr PYC
             |   funcion_instr
+            |   llamada_instr PYC
+            |   return_instr PYC
+            |   arreglos_instr PYC
             ;
 
 declaracion:    tipo ListaId
@@ -195,12 +197,8 @@ imprimir:       PRINT PARA expresion PARC
 if:             IF PARA expresion PARC LLAVEA instrucciones LLAVEC
             |   IF PARA expresion PARC instruccion 
             |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE LLAVEA instrucciones LLAVEC
-            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC elseif_instr
-            ;
-
-elseif_instr:   ELSEIF PARA expresion PARC LLAVEA instrucciones LLAVEC
-            |   ELSEIF PARA expresion PARC LLAVEA instrucciones LLAVEC elseif_instr
-            |   ELSEIF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instrucciones
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instruccion
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE if_instr
             ;
 
 switch_instr:   SWITCH PARA expresion PARC LLAVEA listaCases default_instr LLAVEC   
@@ -218,7 +216,7 @@ default_instr:  DEFAULT DOSP instrucciones
 while_instr:    WHILE PARA expresion PARC LLAVEA instrucciones LLAVEC
             ;
 
-dowhile_instr:  LLAVEA instrucciones LLAVEC WHILE PARA expresion PARC
+dowhile_instr:  DO LLAVEA instrucciones LLAVEC WHILE PARA expresion PARC
             ;
 
 for:            FOR IDENTIFICADOR IN expresion LLAVEA instrucciones LLAVEC
@@ -232,7 +230,45 @@ break_instr:    BREAK
 continue_instr: CONTINUE
             ;
 
+/* DECLARACION DE UNA FUNCION */
+funcion_instr:  VOID ID PARA parametros PARC LLAVEA instrucciones LLAVEC
+            |   VOID ID PARA PARC LLAVEA instrucciones LLAVEC
+            |   tipo ID PARA parametros PARC LLAVEA instrucciones LLAVEC
+            |   tipo ID PARA PARC LLAVEA instrucciones LLAVEC
+            ; 
 
+parametros:     parametros COMA tipo IDENTIFICADOR
+            |   tipo IDENTIFICADOR
+            ;
+
+/* LLAMADA A UNA FUNCION */
+llamada_instr:  IDENTIFICADOR PARA parametros_llamada PARC
+            |   IDENTIFICADOR PARA PARC
+            ;
+
+parametros_llamada: parametros_llamada COMA expresion
+            |   expresion
+            ;
+
+return_instr:   RETURN expresion
+            |   RETURN
+            ;
+
+/* DECLARACION DE ARREGLOS */
+arreglos_instr: tipo CORA CORC IGUAL CORA lista_expr CORC
+            |   tipo CORA CORC IGUAL CORA CORC
+            ;
+
+lista_expr:     lista_expr COMA expresion
+            |   expresion;
+            ;
+
+/* MODIFICACION DE UN ARREGLO */
+modArreglos_instr:  IDENTIFICADOR CORA expresion CORC
+            ;
+
+
+/* EXPRESIONES */
 expresion:      MENOS expresion %prec UNARIO
             |   NOT expresion %prec UNOT
             |   expresion MAS expresion
@@ -257,5 +293,6 @@ expresion:      MENOS expresion %prec UNARIO
             |   TRUE
             |   FALSE
             |   NULL
+            |   IDENTIFICADOR CORA expresion CORC /* ACCESO A UN ARREGLO */
             ;
 
