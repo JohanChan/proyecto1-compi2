@@ -198,7 +198,7 @@ if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC
             |   IF PARA expresion PARC instruccion 
             |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE LLAVEA instrucciones LLAVEC
             |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instruccion
-            
+            /*|   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE if_instr*/
             ;
 
 switch_instr:   SWITCH PARA expresion PARC LLAVEA listaCases default_instr LLAVEC   
@@ -264,7 +264,7 @@ lista_expr:     lista_expr COMA expresion
             ;
             
 /* MODIFICACION DE UN ARREGLO */
-modArreglos_instr:  IDENTIFICADOR CORA expresion CORC
+modArreglos_instr:  IDENTIFICADOR CORA expresion CORC IGUAL expresion
             ;
 
 
@@ -290,9 +290,12 @@ expresion:      MENOS expresion %prec UNARIO
             |   CADENA
             |   CARACTER
             |   IDENTIFICADOR
+            |   IDENTIFICADOR INCRE
+            |   IDENTIFICADOR DECRE
             |   TRUE
             |   FALSE
             |   NULL
-            |   IDENTIFICADOR CORA expresion CORC 
+            |   IDENTIFICADOR CORA expresion CORC /*OBTENER VALOR EN POSICION DE ARREGLO*/
+            |   llamada_instr /*ASIGNAR A UNA VARIABLE EL VALOR DE UNA FUNCION CON RETORNO*/
             ;
 
