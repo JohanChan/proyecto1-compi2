@@ -94,6 +94,8 @@ caracter (\'({escape2}|{acepta2})\')
 "tan"               { console.log("Reconocio : "+ yytext); return 'TAN'}
 "log10"             { console.log("Reconocio : "+ yytext); return 'LOG10'}
 
+"begin"              { console.log("Reconocio : "+ yytext); return 'BEGIN'}
+"end"              { console.log("Reconocio : "+ yytext); return 'END'}
 "push"              { console.log("Reconocio : "+ yytext); return 'PUSH'}
 "pop"               { console.log("Reconocio : "+ yytext); return 'POP'}
 "length"            { console.log("Reconocio : "+ yytext); return 'LENGTH'}
@@ -170,6 +172,8 @@ instruccion:    declaracion PYC
             |   return_instr PYC
             |   arreglos_instr PYC
             |   modArreglos_instr PYC
+            |   push_instr PYC
+            |   pop_instr PYC
             ;
 
 declaracion:    tipo ListaId
@@ -267,23 +271,22 @@ lista_expr:     lista_expr COMA expresion
 modArreglos_instr:  IDENTIFICADOR CORA expresion CORC IGUAL expresion
             ;
 
+push_instr:     IDENTIFICADOR PUNTO PUSH PARA PARC
+            ;
+
+pop_instr:      IDENTIFICADOR PUNTO POP PARA PARC
+            ;
+
 
 /* EXPRESIONES */
 expresion:      MENOS expresion %prec UNARIO
             |   NOT expresion
-            |   expresion MAS expresion
-            |   expresion MENOS expresion
-            |   expresion MULTI expresion
-            |   expresion DIV expresion
-            |   expresion MOD expresion
-            |   expresion MENORQ expresion
-            |   expresion MENORIGUAL expresion
-            |   expresion MAYORQ expresion
-            |   expresion MAYORIGUAL expresion
-            |   expresion IGUALIGUAL expresion
-            |   expresion DIFERENCIA expresion
-            |   expresion AND expresion
-            |   expresion OR expresion
+            |   expresion_log
+            |   expresion_rel
+            |   expresion_arit
+            |   expr_nativa
+            |   expresion_cad
+            |   expresion_cast
             |   PARA expresion PARC
             |   DECIMAL
             |   ENTERO
@@ -295,7 +298,55 @@ expresion:      MENOS expresion %prec UNARIO
             |   TRUE
             |   FALSE
             |   NULL
-            |   IDENTIFICADOR CORA expresion CORC /*OBTENER VALOR EN POSICION DE ARREGLO*/
+            |   acceso_arr
             |   llamada_instr /*ASIGNAR A UNA VARIABLE EL VALOR DE UNA FUNCION CON RETORNO*/
             ;
 
+expresion_arit: expresion MAS expresion
+            |   expresion MENOS expresion
+            |   expresion MULTI expresion
+            |   expresion DIV expresion
+            |   expresion MOD expresion
+            ;
+
+expresion_rel:  expresion MENORQ expresion
+            |   expresion MENORIGUAL expresion
+            |   expresion MAYORQ expresion
+            |   expresion MAYORIGUAL expresion
+            |   expresion IGUALIGUAL expresion
+            |   expresion DIFERENCIA expresion
+            ;
+
+expresion_log:  expresion AND expresion
+            |   expresion OR expresion
+            ;
+        
+expr_nativa:    SQRT PARA expresion PARC 
+            |   SIN PARA expresion PARC 
+            |   COS PARA expresion PARC 
+            |   TAN PARA expresion PARC 
+            |   LOG10 PARA expresion PARC 
+            ;
+
+expresion_cad:  expresion CONCATENACION expresion
+            |   expresion REPETICION expresion
+            |   IDENTIFICADOR PUNTO CARACTEROFPOSITION PARA ENTERO PARC
+            |   IDENTIFICADOR PUNTO SUBSTRING PARA ENTERO COMA ENTERO PARC
+            |   IDENTIFICADOR PUNTO LENGTH PARA PARC
+            |   IDENTIFICADOR PUNTO TOUPPERCASE PARA PARC
+            |   IDENTIFICADOR PUNTO TOLOWERCASE PARA PARC
+            ;
+
+expresion_cast: tipo PUNTO PARSE PARA expresion PARC
+            |   TOINT PARA expresion PARC
+            |   TODOUBLE PARA expresion PARC
+            |   TYPEOF PARA expresion PARC
+            |   STRING_CAST PARA expresion PARC
+            ;
+
+acceso_arr:     IDENTIFICADOR CORA expresion CORC /*OBTENER VALOR EN POSICION DE ARREGLO*/
+            |   IDENTIFICADOR CORA expresion DOSP expresion CORC
+            |   IDENTIFICADOR CORA BEGIN DOSP expresion CORC
+            |   IDENTIFICADOR CORA expresion DOSP END CORC
+            |   NUMERAL IDENTIFICADOR /*COPIAR ARREGLO*/
+            ;
