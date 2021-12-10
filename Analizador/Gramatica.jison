@@ -132,7 +132,11 @@ caracter (\'({escape2}|{acepta2})\')
 /* Area de imports */
 
 %{
-    
+    const {Print} = require("../Instrucciones/Primitivas/Print");
+    const {Primitivo} = require("../Expresiones/Primitivo");
+    const {Operacion, Operador} = require("../Expresiones/Operacion");
+    const {Objeto} = require("../Expresiones/Objeto");
+    const {Atributo} = require("../Expresiones/Atributo");
 
 %}
 
@@ -150,30 +154,30 @@ caracter (\'({escape2}|{acepta2})\')
 %start inicio
 
 %% /* Gramatica */
-inicio:     instrucciones EOF
-;
-
-instrucciones:  instrucciones instruccion 
-            |   instruccion
+inicio:     instrucciones EOF               { $$ = $1; return $$; }
             ;
 
-instruccion:    declaracion PYC
-            |   asignacion PYC
-            |   imprimir PYC
-            |   if_instr
-            |   switch_instr
-            |   while_instr
-            |   dowhile_instr PYC
-            |   for_instr
-            |   break_instr PYC
-            |   continue_instr PYC
-            |   funcion_instr
-            |   llamada_instr PYC
-            |   return_instr PYC
-            |   arreglos_instr PYC
-            |   modArreglos_instr PYC
-            |   push_instr PYC
-            |   pop_instr PYC
+instrucciones:  instrucciones instruccion   { $1.push($2); $$ = $1;}
+            |   instruccion                 { $$ = [$1]; }
+            ;
+
+instruccion:    declaracion PYC         { $$ = $1; }
+            |   asignacion PYC          { $$ = $1; }
+            |   imprimir PYC            { $$ = $1; }
+            |   if_instr                { $$ = $1; }
+            |   switch_instr            { $$ = $1; }
+            |   while_instr             { $$ = $1; }
+            |   dowhile_instr PYC       { $$ = $1; }
+            |   for_instr               { $$ = $1; }
+            |   break_instr PYC         { $$ = $1; }
+            |   continue_instr PYC      { $$ = $1; }
+            |   funcion_instr           { $$ = $1; }
+            |   llamada_instr PYC       { $$ = $1; }
+            |   return_instr PYC        { $$ = $1; }
+            |   arreglos_instr PYC      { $$ = $1; }
+            |   modArreglos_instr PYC   { $$ = $1; }
+            |   push_instr PYC          { $$ = $1; }
+            |   pop_instr PYC           { $$ = $1; }
             ;
 
 declaracion:    tipo ListaId
@@ -194,8 +198,8 @@ tipo:           INT
 asignacion:     IDENTIFICADOR IGUAL expresion
             ;
 
-imprimir:       PRINT PARA expresion PARC
-            |   PRINTLN PARA expresion PARC
+imprimir:       PRINT PARA expresion PARC       { $$ = new Print($3, @1.first_line, @1.last_column);}
+            |   PRINTLN PARA expresion PARC     { $$ = new Print($3, @1.first_line, @1.last_column);}
             ;
 
 if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC
@@ -288,16 +292,16 @@ expresion:      MENOS expresion %prec UNARIO
             |   expresion_cad
             |   expresion_cast
             |   PARA expresion PARC
-            |   DECIMAL
-            |   ENTERO
-            |   CADENA
-            |   CARACTER
+            |   DECIMAL                 { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
+            |   ENTERO                  { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
+            |   CADENA                  { $$ = new Primitivo($1, @1.first_line, @1.first_column); }
+            |   CARACTER                { $$ = new Primitivo($1, @1.first_line, @1.first_column); }
+            |   TRUE                    { $$ = new Primitivo(true, @1.first_line, @1.first_column); }
+            |   FALSE                   { $$ = new Primitivo(false, @1.first_line, @1.first_column); }
+            |   NULL                    { $$ = new Primitivo(null, @1.first_line, @1.first_column); }
             |   IDENTIFICADOR
             |   IDENTIFICADOR INCRE
             |   IDENTIFICADOR DECRE
-            |   TRUE
-            |   FALSE
-            |   NULL
             |   acceso_arr
             |   llamada_instr /*ASIGNAR A UNA VARIABLE EL VALOR DE UNA FUNCION CON RETORNO*/
             ;
