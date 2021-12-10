@@ -320,7 +320,7 @@ expresion_rel:  expresion MENORQ expresion
 expresion_log:  expresion AND expresion
             |   expresion OR expresion
             ;
-        
+
 expr_nativa:    SQRT PARA expresion PARC 
             |   SIN PARA expresion PARC 
             |   COS PARA expresion PARC 
@@ -328,9 +328,7 @@ expr_nativa:    SQRT PARA expresion PARC
             |   LOG10 PARA expresion PARC 
             ;
 
-expresion_cad:  expresion CONCATENACION expresion
-            |   expresion REPETICION expresion
-            |   IDENTIFICADOR PUNTO CARACTEROFPOSITION PARA ENTERO PARC
+expresion_cad:  IDENTIFICADOR PUNTO CARACTEROFPOSITION PARA ENTERO PARC
             |   IDENTIFICADOR PUNTO SUBSTRING PARA ENTERO COMA ENTERO PARC
             |   IDENTIFICADOR PUNTO LENGTH PARA PARC
             |   IDENTIFICADOR PUNTO TOUPPERCASE PARA PARC
