@@ -130,10 +130,10 @@ caracter (\'({escape2}|{acepta2})\')
                         +" linea "+yylineno
                         +" columna "+(yylloc.last_column+1));
 
-                        new errores('Lexico', 'El caracter ' + yytext 
+                        /*new errores('Lexico', 'El caracter ' + yytext 
                                 + ' no forma parte del lenguaje', 
                                 yylineno+1, 
-                                yylloc.last_column+1); 
+                                yylloc.last_column+1); */
                                       
             }
 

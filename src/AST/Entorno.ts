@@ -1,4 +1,4 @@
-import { Simbolo } from "./Simbolo";
+import { Simbolo } from "../TablaSimbolos/Simbolo";
 
 
 export class Entorno{
