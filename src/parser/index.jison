@@ -41,19 +41,19 @@ caracter (\'({escape2}|{acepta2})\')
 ";"                  { console.log("Reconocio : "+ yytext); return 'PYC'}
 "."                  { console.log("Reconocio : "+ yytext); return 'PUNTO'}
 ","                  { console.log("Reconocio : "+ yytext); return 'COMA'}
-"="                  { console.log("Reconocio : "+ yytext); return 'IGUAL'}
 "=="                 { console.log("Reconocio : "+ yytext); return 'IGUALIGUAL'}
+"="                  { console.log("Reconocio : "+ yytext); return 'IGUAL'}
 "!="                 { console.log("Reconocio : "+ yytext); return 'DIFERENCIA'}
 "<"                  { console.log("Reconocio : "+ yytext); return 'MENORQ'}
 "<="                 { console.log("Reconocio : "+ yytext); return 'MENORIGUAL'}
 ">"                  { console.log("Reconocio : "+ yytext); return 'MAYORQ'}
 ">="                 { console.log("Reconocio : "+ yytext); return 'MAYORIGUAL'}
 "||"                 { console.log("Reconocio : "+ yytext); return 'OR'}
-"&&"                 { console.log("Reconocio : "+ yytext); return 'AND'}
 "!"                  { console.log("Reconocio : "+ yytext); return 'NOT'}
 ":"                  { console.log("Reconocio : "+ yytext); return 'DOSP'}
 "?"                  { console.log("Reconocio : "+ yytext); return 'INTERRC'}
 "#"                  { console.log("Reconocio : "+ yytext); return 'NUMERAL'}
+"&&"                 { console.log("Reconocio : "+ yytext); return 'AND'}
 "&"                  { console.log("Reconocio : "+ yytext); return 'CONCATENACION'}
 "^"                  { console.log("Reconocio : "+ yytext); return 'REPETICION'}
 

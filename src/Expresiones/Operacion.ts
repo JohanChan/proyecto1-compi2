@@ -1,5 +1,6 @@
 import { AST } from "../AST/AST";
 import { Entorno } from "../AST/Entorno";
+import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { tipo } from "../TablaSimbolos/Tipo";
 
@@ -17,10 +18,11 @@ export enum Operador{
     AND,
     NOT,
     UNARIO,
-    POTENCIA,
     MOD,
     IGUALIGUAL,
-    DIFERENTE
+    DIFERENTE,
+    REPETICION,
+    CONCATENACION
 }
 
 export class Operacion implements Expresion{
@@ -48,23 +50,27 @@ export class Operacion implements Expresion{
             case '-': return Operador.RESTA; break;
             case '*': return Operador.MULTIPLICACION; break;
             case '/': return Operador.DIVISION; break;
+            case '%': return Operador.MOD; break;
+            case '==': return Operador.IGUALIGUAL; break;
+            case '!=': return Operador.DIFERENTE; break;
             case '<': return Operador.MENORQUE; break;
             case '>': return Operador.MARYOQUE; break;
             case '<=': return Operador.MENORIGUALQUE; break;
             case '>=': return Operador.MAYORIGUALQUE; break;
-            case '||': return Operador.OR; break;
             case '&&': return Operador.AND; break;
-            case '==': return Operador.IGUALIGUAL; break;
+            case '||': return Operador.OR; break;
             case '!': return Operador.NOT; break;
+            case '&': return Operador.CONCATENACION; break;
+            case '^': return Operador.REPETICION; break;
         }
     }
-    getTipo(ent: Entorno, arbol: AST): tipo {
+    getTipo(controlador: Controlador, arbol: AST): tipo {
         throw new Error("Method not implemented.");
     }
-    getValorImplicito(ent: Entorno, arbol: AST) {
+    getValorImplicito(controlador: Controlador, arbol: AST) {
         throw new Error("Method not implemented.");
     }
-    traducir(ent: Entorno, arbol: AST) {
+    traducir(controlador: Controlador, arbol: AST) {
         throw new Error("Method not implemented.");
     }
     

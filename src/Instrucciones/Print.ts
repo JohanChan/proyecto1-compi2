@@ -1,5 +1,6 @@
 import { AST } from "../AST/AST";
 import { Entorno } from "../AST/Entorno";
+import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 
@@ -16,12 +17,12 @@ export class Print implements Instruccion{
         this.columna = columna;
     }
 
-    traducir(ent: Entorno, arbol: AST) {
+    traducir(controlador: Controlador, arbol: AST) {
         throw new Error("Method not implemented.");
     }
 
-    ejecutar(ent: Entorno, arbol: AST) {
-        const valor = this.expresion.getValorImplicito(ent, arbol);
+    ejecutar(controlador: Controlador, arbol: AST) {
+        const valor = this.expresion.getValorImplicito(controlador, arbol);
         if(valor!==null){
             console.log('>',valor);
         }else{
