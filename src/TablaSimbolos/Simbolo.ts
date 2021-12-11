@@ -28,5 +28,4 @@ export class Simbolo implements Expresion {
     getValorImplicito(ent: Entorno, arbol: AST) {
         return this.valor;
     }
-    
 }

@@ -144,10 +144,13 @@ caracter (\'({escape2}|{acepta2})\')
 %{
     const {Print} = require("../Instrucciones/Print");
     const {Primitivo} = require("../Expresiones/Primitivo");
-    const {Operacion, Operador} = require("../Expresiones/Operacion");
+    //const {Operacion, Operador} = require("../Expresiones/Operacion");
     const {Objeto} = require("../Expresiones/Objeto");
     const {Atributo} = require("../Expresiones/Atributo");
     const { errores } = require("../AST/Errores");
+    const { Logica } = require('../Expresiones/Logica');
+    const { Relacional } = require('../Expresiones/Relacional');
+    const { Aritmetica } = require('../Expresiones/Aritmetica');
 
 %}
 
