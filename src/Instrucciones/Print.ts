@@ -3,6 +3,7 @@ import { Entorno } from "../AST/Entorno";
 import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
+import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 
 // print("hola mundo");
 
@@ -17,12 +18,12 @@ export class Print implements Instruccion{
         this.columna = columna;
     }
 
-    traducir(controlador: Controlador, arbol: AST) {
+    traducir(controlador: Controlador, tabla: TablaSimbolos) {
         throw new Error("Method not implemented.");
     }
 
-    ejecutar(controlador: Controlador, arbol: AST) {
-        const valor = this.expresion.getValorImplicito(controlador, arbol);
+    ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
+        const valor = this.expresion.getValorImplicito(controlador, tabla);
         if(valor!==null){
             console.log('>',valor);
         }else{

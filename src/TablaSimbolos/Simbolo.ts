@@ -3,6 +3,7 @@ import { AST } from "../AST/AST";
 import { Entorno } from "../AST/Entorno";
 import { tipo, Tipo } from "./Tipo";
 import { Controlador } from "Controlador";
+import { TablaSimbolos } from "./TablaSimbolos";
 
 export class Simbolo implements Expresion {
     public indentificador: string;
@@ -19,14 +20,14 @@ export class Simbolo implements Expresion {
         this.valor = valor;
     }
     
-    traducir(controlador: Controlador, arbol: AST) {
+    traducir(controlador: Controlador, tabla: TablaSimbolos) {
         throw new Error("Method not implemented.");
     }
 
-    getTipo(controlador: Controlador, arbol: AST): tipo {
+    getTipo(controlador: Controlador, tabla: TablaSimbolos): tipo {
         return this.tipo;
     }
-    getValorImplicito(controlador: Controlador, arbol: AST) {
+    getValorImplicito(controlador: Controlador, tabla: TablaSimbolos) {
         return this.valor;
     }
 }

@@ -2,12 +2,13 @@ import { AST } from "../AST/AST";
 import { Entorno } from "../AST/Entorno";
 import { tipo, Tipo } from "../TablaSimbolos/Tipo";
 import { Controlador } from '../Controlador'
+import { TablaSimbolos } from "TablaSimbolos/TablaSimbolos";
 export interface Expresion{
      linea:number;
      columna: number;
     
-     getTipo(contolador:Controlador, arbol:AST):tipo ;
-     getValorImplicito(controlador:Controlador, arbol:AST):any;
-     traducir(controlador:Controlador, arbol:AST):any ;
+     getTipo(contolador:Controlador, tabla:TablaSimbolos):tipo ;
+     getValorImplicito(controlador:Controlador, tabla:TablaSimbolos):any;
+     traducir(controlador:Controlador, tabla:TablaSimbolos):any ;
      
 }

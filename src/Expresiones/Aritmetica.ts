@@ -10,8 +10,8 @@ export class Aritmetica extends Operacion implements Expresion{
     public constructor(expIzq, operador, exprDer, linea, columna, esUnario){
         super(expIzq,operador,exprDer,linea,columna,esUnario);
     }
-    getTipo(controlador: Controlador, arbol: AST): tipo {
-        let value = this.getValorImplicito(controlador,arbol);
+    getTipo(controlador: Controlador, tabla:TablaSimbolos): tipo {
+        let value = this.getValorImplicito(controlador,tabla);
 
         if(typeof value === 'number'){
             return tipo.DOUBLE;
@@ -21,11 +21,17 @@ export class Aritmetica extends Operacion implements Expresion{
             return tipo.STRING;
         }
     }
-    getValorImplicito(controlador: Controlador, arbol: AST): void {
-        
+    getValorImplicito(controlador: Controlador, tabla:TablaSimbolos): void {
+        let valorIzq;
+        let valorDer;
+        let valorUnario;
+        if(this.esUnario == false){
+            valorIzq = this.expIzq.getValorImplicito(controlador,tabla);
+
+        }
     }
 
-    traducir(controlador: Controlador, arbol: AST): void {
+    traducir(controlador: Controlador, tabla: TablaSimbolos): void {
         throw 'Sin data';
         
     }
