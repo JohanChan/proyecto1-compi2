@@ -2,7 +2,6 @@ import { AST } from "../AST/AST";
 import { Entorno } from "../AST/Entorno";
 import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
-import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
 
 
@@ -65,13 +64,13 @@ export class Operacion implements Expresion{
             case '^': return Operador.REPETICION; break;
         }
     }
-    getTipo(controlador: Controlador, tabla:TablaSimbolos): tipo {
+    getTipo(controlador: Controlador, arbol: AST): tipo {
         throw new Error("Method not implemented.");
     }
-    getValorImplicito(controlador: Controlador, tabla:TablaSimbolos) {
+    getValorImplicito(controlador: Controlador, arbol: AST) {
         throw new Error("Method not implemented.");
     }
-    traducir(controlador: Controlador, tabla:TablaSimbolos) {
+    traducir(controlador: Controlador, arbol: AST) {
         throw new Error("Method not implemented.");
     }
     

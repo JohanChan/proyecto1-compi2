@@ -3,7 +3,6 @@ import { Entorno } from "../AST/Entorno";
 import { tipo, Tipo } from "../TablaSimbolos/Tipo";
 import { Expresion } from "../Interfaces/Expresion";
 import { Controlador } from "../Controlador";
-import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 
 export class Primitivo implements Expresion {
     linea: number;
@@ -16,12 +15,12 @@ export class Primitivo implements Expresion {
         this.valor = valor;
     }
 
-    traducir(controlador: Controlador, tabla: TablaSimbolos) {
+    traducir(controlador: Controlador, arbol: AST) {
         throw new Error("Method not implemented.");
     }
 
-    getTipo(controlador: Controlador, tabla: TablaSimbolos): tipo {
-        const valor = this.getValorImplicito(controlador, tabla);
+    getTipo(controlador: Controlador, arbol: AST): tipo {
+        const valor = this.getValorImplicito(controlador, arbol);
         if (typeof (valor) === 'boolean') {
             return tipo.BOOL;
         }
@@ -38,7 +37,7 @@ export class Primitivo implements Expresion {
         return tipo.VOID;
     }
 
-    getValorImplicito(controlador: Controlador, tabla: TablaSimbolos) {
+    getValorImplicito(controlador: Controlador, arbol: AST) {
         return this.valor;
     }
 

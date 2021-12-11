@@ -8,22 +8,22 @@ import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 // print("hola mundo");
 
 export class Print implements Instruccion{
-    linea: number;
+    fila: number;
     columna: number;
     public expresion:Expresion;
 
     constructor(exp:Expresion, linea:number, columna:number){
         this.expresion = exp;
-        this.linea = linea;
+        this.fila = linea;
         this.columna = columna;
     }
 
-    traducir(controlador: Controlador, tabla: TablaSimbolos) {
+    traducir(controlador: Controlador, arbol: TablaSimbolos) {
         throw new Error("Method not implemented.");
     }
 
-    ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
-        const valor = this.expresion.getValorImplicito(controlador, tabla);
+    ejecutar(controlador: Controlador, arbol: TablaSimbolos) {
+        const valor = this.expresion.getValor(controlador, arbol);
         if(valor!==null){
             console.log('>',valor);
         }else{

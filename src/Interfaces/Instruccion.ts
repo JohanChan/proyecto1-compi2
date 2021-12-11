@@ -1,12 +1,12 @@
 import { Controlador } from "Controlador";
-import { TablaSimbolos } from "TablaSimbolos/TablaSimbolos";
 import { AST } from "../AST/AST";
+import {TablaSimbolos} from "../TablaSimbolos/TablaSimbolos"
 import { Entorno } from "../AST/Entorno";
 
 export interface Instruccion{
-     linea:number;
+     fila:number;
      columna: number;
     
-     ejecutar(controlador: Controlador, tabla:TablaSimbolos):any ;
-     traducir(controlador: Controlador, tabla:TablaSimbolos):any ;
+     ejecutar(controlador: Controlador, arbol:TablaSimbolos):any ;
+     traducir(controlador: Controlador, arbol:TablaSimbolos):any ;
 }

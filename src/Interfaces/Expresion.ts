@@ -1,14 +1,17 @@
 import { AST } from "../AST/AST";
+import Nodo from "../AST/Nodo";
+import {TablaSimbolos} from "../TablaSimbolos/TablaSimbolos"
 import { Entorno } from "../AST/Entorno";
 import { tipo, Tipo } from "../TablaSimbolos/Tipo";
 import { Controlador } from '../Controlador'
-import { TablaSimbolos } from "TablaSimbolos/TablaSimbolos";
 export interface Expresion{
      linea:number;
      columna: number;
     
-     getTipo(contolador:Controlador, tabla:TablaSimbolos):tipo ;
-     getValorImplicito(controlador:Controlador, tabla:TablaSimbolos):any;
-     traducir(controlador:Controlador, tabla:TablaSimbolos):any ;
+     getTipo(contolador:Controlador, arbol:TablaSimbolos):tipo ;
+     getValor(controlador:Controlador, arbol:TablaSimbolos):any;
+     traducir(controlador:Controlador, arbol:TablaSimbolos):any ;
+
+     recorrer():Nodo;
      
 }

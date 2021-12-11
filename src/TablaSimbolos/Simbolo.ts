@@ -1,33 +1,46 @@
 import { Expresion } from "../Interfaces/Expresion";
 import { AST } from "../AST/AST";
+import {TablaSimbolos} from "../TablaSimbolos/TablaSimbolos"
 import { Entorno } from "../AST/Entorno";
 import { tipo, Tipo } from "./Tipo";
 import { Controlador } from "Controlador";
-import { TablaSimbolos } from "./TablaSimbolos";
 
-export class Simbolo implements Expresion {
-    public indentificador: string;
+export class Simbolo {
+    public simbolo: number;
+    public tipo: Tipo;
+    public identificador: string;
     public valor: any;
-    private tipo: tipo;
-    linea: number;
-    columna: number;
 
-    constructor(tipo:tipo, id:string, linea:number, columna:number, valor:any){
-        this.indentificador = id;
-        this.linea = linea;
-        this.columna = columna;
+    public listaParams: Array<Simbolo>;
+    public metodo: boolean;
+
+    constructor(simbolo: number, tipo: Tipo, identificador: string, valor: any, listaParams?, metodo?){
+        this.simbolo = simbolo;
         this.tipo = tipo;
+        this.identificador = identificador;
         this.valor = valor;
+        this.listaParams = listaParams;
+        this.metodo = metodo;
     }
-    
-    traducir(controlador: Controlador, tabla: TablaSimbolos) {
+    /*
+    traducir(controlador: Controlador, arbol: TablaSimbolos) {
         throw new Error("Method not implemented.");
     }
 
-    getTipo(controlador: Controlador, tabla: TablaSimbolos): tipo {
+    getTipo(controlador: Controlador, arbol: TablaSimbolos): tipo {
         return this.tipo;
     }
-    getValorImplicito(controlador: Controlador, tabla: TablaSimbolos) {
+    getValor(controlador: Controlador, arbol: TablaSimbolos) {
         return this.valor;
     }
+    */
+
+    setValor(valor: any){
+        this.valor = valor;
+    }
+
+    getValor(): any{
+        return this.valor;
+    }
+    
 }
