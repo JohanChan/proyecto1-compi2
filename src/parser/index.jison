@@ -315,8 +315,8 @@ dowhile_instr:  DO LLAVEA instrucciones LLAVEC WHILE PARA expresion PARC    { $$
             ;
 
 for_instr:      FOR IDENTIFICADOR IN expresion LLAVEA instrucciones LLAVEC
-            |   FOR PARA declaracion PYC expresion PYC expresion PARC LLAVEA actualizar LLAVEC   { $$ = new For($3, null, $5, $7, $10, @1.first_line, @1.first_column); }
-            |   FOR PARA asignacion PYC expresion PYC expresion PARC LLAVEA actualizar LLAVEC    { $$ = new For(null, $3, $5, $7, $10, @1.first_line, @1.first_column); }
+            |   FOR PARA declaracion PYC expresion PYC actualizar PARC LLAVEA instrucciones LLAVEC   { $$ = new For($3, null, $5, $7, $10, @1.first_line, @1.first_column); }
+            |   FOR PARA asignacion PYC expresion PYC actualizar PARC LLAVEA instrucciones LLAVEC    { $$ = new For(null, $3, $5, $7, $10, @1.first_line, @1.first_column); }
             ;
 
 actualizar:     IDENTIFICADOR INCRE     { $$ = new Asignacion($1, new Aritmetica(new Identificador($1, @1.first_line, @1.first_column), '+', new Primitivo(1, @1.first_line, @1.last_column),@1.first_line, @1.last_column, false), @1.first_line, @1.last_column); }
