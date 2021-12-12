@@ -161,10 +161,10 @@ caracter (\'({escape2}|{acepta2})\')
     const { While } = require('../Instrucciones/SenteciasCiclicas/While');
     const { DoWhile } = require('../Instrucciones/SenteciasCiclicas/DoWhile');
     
-    const If = require('../Instrucciones/SentenciaDeControl/If');
-    const detener = require('../Instrucciones/SentenciaTransferencia/Detener');
-    const continuar = require('../Instrucciones/SentenciaTransferencia/Continuar');
-    const retornar = require('..s/Instrucciones/SentenciaTransferencia/Retornar');
+    const { If } = require('../Instrucciones/SentenciaDeControl/If');
+    const { Detener } = require('../Instrucciones/SentenciaTransferencia/Detener');
+    const { Continuar } = require('../Instrucciones/SentenciaTransferencia/Continuar');
+    const { Retornar } = require('..s/Instrucciones/SentenciaTransferencia/Retornar');
     
 %}
 
