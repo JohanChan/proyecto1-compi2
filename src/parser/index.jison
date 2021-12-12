@@ -27,10 +27,10 @@ caracter (\'({escape2}|{acepta2})\')
 
 "*"                  { console.log("Reconocio : "+ yytext); return 'MULTI'}
 "/"                  { console.log("Reconocio : "+ yytext); return 'DIV'}
-"-"                  { console.log("Reconocio : "+ yytext); return 'MENOS'}
 "++"                 { console.log("Reconocio : "+ yytext); return 'INCRE'}
 "--"                 { console.log("Reconocio : "+ yytext); return 'DECRE'}
 "+"                  { console.log("Reconocio : "+ yytext); return 'MAS'}
+"-"                  { console.log("Reconocio : "+ yytext); return 'MENOS'}
 "%"                  { console.log("Reconocio : "+ yytext); return 'MOD'}
 "("                  { console.log("Reconocio : "+ yytext); return 'PARA'}
 ")"                  { console.log("Reconocio : "+ yytext); return 'PARC'}
@@ -44,10 +44,10 @@ caracter (\'({escape2}|{acepta2})\')
 "=="                 { console.log("Reconocio : "+ yytext); return 'IGUALIGUAL'}
 "="                  { console.log("Reconocio : "+ yytext); return 'IGUAL'}
 "!="                 { console.log("Reconocio : "+ yytext); return 'DIFERENCIA'}
-"<"                  { console.log("Reconocio : "+ yytext); return 'MENORQ'}
-"<="                 { console.log("Reconocio : "+ yytext); return 'MENORIGUAL'}
-">"                  { console.log("Reconocio : "+ yytext); return 'MAYORQ'}
 ">="                 { console.log("Reconocio : "+ yytext); return 'MAYORIGUAL'}
+"<="                 { console.log("Reconocio : "+ yytext); return 'MENORIGUAL'}
+"<"                  { console.log("Reconocio : "+ yytext); return 'MENORQ'}
+">"                  { console.log("Reconocio : "+ yytext); return 'MAYORQ'}
 "||"                 { console.log("Reconocio : "+ yytext); return 'OR'}
 "!"                  { console.log("Reconocio : "+ yytext); return 'NOT'}
 ":"                  { console.log("Reconocio : "+ yytext); return 'DOSP'}
@@ -157,6 +157,9 @@ caracter (\'({escape2}|{acepta2})\')
     const { Asignacion } = require('../Instrucciones/Asignacion');
     const { Simbolo } = require('../TablaSimbolos/Simbolo');
     const { Identificador } = require('../Expresiones/Identificador');
+    const { For } = require('../Instrucciones/SenteciasCiclicas/For');
+    const { While } = require('../Instrucciones/SenteciasCiclicas/While');
+    const { DoWhile } = require('../Instrucciones/SenteciasCiclicas/DoWhile');
 %}
 
 /* Precedencia de operadores */
@@ -190,6 +193,7 @@ instruccion:    declaracion PYC         { $$ = $1; }
             |   while_instr             { $$ = $1; }
             |   dowhile_instr PYC       { $$ = $1; }
             |   for_instr               { $$ = $1; }
+            |   actualizar PYC          { $$ = $1; }
             |   break_instr PYC         { $$ = $1; }
             |   continue_instr PYC      { $$ = $1; }
             |   funcion_instr           { $$ = $1; }
@@ -298,17 +302,21 @@ listaCases:     listaCases CASE expresion DOSP instrucciones
 default_instr:  DEFAULT DOSP instrucciones
             ;
 
-while_instr:    WHILE PARA expresion PARC LLAVEA instrucciones LLAVEC
+while_instr:    WHILE PARA expresion PARC LLAVEA instrucciones LLAVEC       { $$ = new While($3, $6, @1.first_line, @1.first_column); }
             ;
 
-dowhile_instr:  DO LLAVEA instrucciones LLAVEC WHILE PARA expresion PARC
+dowhile_instr:  DO LLAVEA instrucciones LLAVEC WHILE PARA expresion PARC    { $$ = new DoWhile($7, $3, @1.first_line, @1.first_column); }
             ;
 
 for_instr:      FOR IDENTIFICADOR IN expresion LLAVEA instrucciones LLAVEC
-            |   FOR PARA declaracion PYC expresion PYC expresion PARC LLAVEA instrucciones LLAVEC
-            |   FOR PARA asignacion PYC expresion PYC expresion PARC LLAVEA instrucciones LLAVEC
+            |   FOR PARA declaracion PYC expresion PYC expresion PARC LLAVEA actualizar LLAVEC   { $$ = new For($3, null, $5, $7, $10, @1.first_line, @1.first_column); }
+            |   FOR PARA asignacion PYC expresion PYC expresion PARC LLAVEA actualizar LLAVEC    { $$ = new For(null, $3, $5, $7, $10, @1.first_line, @1.first_column); }
             ;
 
+actualizar:     IDENTIFICADOR INCRE     { $$ = new Asignacion($1, new Aritmetica(new Identificador($1, @1.first_line, @1.first_column), '+', new Primitivo(1, @1.first_line, @1.last_column),@1.first_line, @1.last_column, false), @1.first_line, @1.last_column); }
+            |   IDENTIFICADOR DECRE     { $$ = new Asignacion($1, new Aritmetica(new Identificador($1, @1.first_line, @1.first_column), '-', new Primitivo(1, @1.first_line, @1.last_column),@1.first_line, @1.last_column, false), @1.first_line, @1.last_column); }
+
+            ;
 break_instr:    BREAK
             ;
 
@@ -365,9 +373,9 @@ expresion:      MENOS expresion %prec UNARIO
             |   expresion_rel           { $$ = $1; }
             |   expresion_arit          { $$ = $1; }
             |   expresion_cadena        { $$ = $1; }
-            |   expr_nativa
-            |   expresion_cad
-            |   expresion_cast
+            |   expr_nativa             { $$ = $1; }
+            |   expresion_cad           { $$ = $1; }
+            |   expresion_cast          { $$ = $1; }
             |   PARA expresion PARC     { $$ = $2; }
             |   DECIMAL                 { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
             |   ENTERO                  { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
@@ -377,8 +385,6 @@ expresion:      MENOS expresion %prec UNARIO
             |   FALSE                   { $$ = new Primitivo(false, @1.first_line, @1.first_column); }
             |   NULL                    { $$ = new Primitivo(null, @1.first_line, @1.first_column); }
             |   IDENTIFICADOR           { $$ = new Identificador($1, @1.first_line, @1.first_column); }
-            |   IDENTIFICADOR INCRE
-            |   IDENTIFICADOR DECRE
             |   acceso_arr
             |   llamada_instr /*ASIGNAR A UNA VARIABLE EL VALOR DE UNA FUNCION CON RETORNO*/
             ;
