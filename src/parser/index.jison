@@ -144,14 +144,19 @@ caracter (\'({escape2}|{acepta2})\')
 %{
     const {Print} = require("../Instrucciones/Print");
     const {Primitivo} = require("../Expresiones/Primitivo");
-    //const {Operacion, Operador} = require("../Expresiones/Operacion");
     const {Objeto} = require("../Expresiones/Objeto");
     const {Atributo} = require("../Expresiones/Atributo");
     const { errores } = require("../AST/Errores");
     const { Logica } = require('../Expresiones/Logica');
     const { Relacional } = require('../Expresiones/Relacional');
     const { Aritmetica } = require('../Expresiones/Aritmetica');
-
+    const { Tipo } = require('../TablaSimbolos/Tipo');
+    const { Cadena } = require('../Expresiones/Cadena');
+    const { AST } = require('../AST/AST');
+    const { Declaracion } = require('../Instrucciones/Declaracion');
+    const { Asignacion } = require('../Instrucciones/Asignacion');
+    const { Simbolo } = require('../TablaSimbolos/Simbolo');
+    const { Identificador } = require('../Expresiones/Identificador');
 %}
 
 /* Precedencia de operadores */
@@ -162,17 +167,19 @@ caracter (\'({escape2}|{acepta2})\')
 %left 'IGUALIGUAL' 'DIFERENCIA' 'MENORQ' 'MENORIGUAL' 'MAYORQ' 'MAYORIGUAL'
 %left 'MAS' 'MENOS'
 %left 'DIV' 'MULTI' 'MOD'
+%left 'CONCATENACION' 'REPETICION'
 %right 'UNARIO'
 
 
 %start inicio
 
 %% /* Gramatica */
-inicio:     instrucciones EOF               { $$ = $1; return $$; }
+inicio:     instrucciones EOF               { $$ = new AST($1);
+                                            return $$; }
             ;
 
-instrucciones:  instrucciones instruccion   { $1.push($2); $$ = $1;}
-            |   instruccion                 { $$ = [$1]; }
+instrucciones:  instrucciones instruccion   { $$ = $1; $1.push($2); }
+            |   instruccion                 { $$ = new Array(); $$.push($1); }
             ;
 
 instruccion:    declaracion PYC         { $$ = $1; }
@@ -194,29 +201,78 @@ instruccion:    declaracion PYC         { $$ = $1; }
             |   pop_instr PYC           { $$ = $1; }
             |   error                   { console.log("Error sintactico "+yytext+" linea: "+this._$.first_line+" columna "+this._$.first_column);
                                           //new errores("Error Sintactico", "No se esperaba simbolo "+ yytext, this._$.first_line, this._$.first_column);
-                                         }
+                                        }
             ;
 
-declaracion:    tipo ListaId
-            |   tipo IDENTIFICADOR IGUAL expresion
+declaracion:    tipo ListaId                        {    
+                                                        if($1.type === 0){
+                                                            let arr = new Array();
+                                                            for(let ide of $2){
+                                                                let nuevoS = new Simbolo(1, null, ide, new Primitivo("",@1.first_line,@1.first_column));
+                                                                arr.push(nuevoS);
+                                                            }
+                                                            $$ = new Declaracion($1, arr, @1.first_line, @1.first_column);
+                                                        }else if($1.type === 1){
+                                                            let arr = new Array();
+                                                            for(let ide of $2){
+                                                                let nuevoS = new Simbolo(1, null, ide, new Primitivo(0,@1.first_line,@1.first_column));
+                                                                arr.push(nuevoS);
+                                                            }
+                                                            $$ = new Declaracion($1, arr, @1.first_line, @1.first_column);
+                                                        }else if($1.type === 2){
+                                                            let arr = new Array();
+                                                            for(let ide of $2){
+                                                                let nuevoS = new Simbolo(1, null, ide, new Primitivo(0.0,@1.first_line,@1.first_column));
+                                                                arr.push(nuevoS);
+                                                            }
+                                                            $$ = new Declaracion($1, arr, @1.first_line, @1.first_column);
+                                                        }else if($1.type === 3){
+                                                            let arr = new Array();
+                                                            for(let ide of $2){
+                                                                let nuevoS = new Simbolo(1, null, ide, new Primitivo(true,@1.first_line,@1.first_column));
+                                                                arr.push(nuevoS);
+                                                            }
+                                                            $$ = new Declaracion($1, arr, @1.first_line, @1.first_column);
+                                                        }else if($1.type === 4){
+                                                            let arr = new Array();
+                                                            for(let ide of $2){
+                                                                let nuevoS = new Simbolo(1, null, ide, new Primitivo('\0',@1.first_line,@1.first_column));
+                                                                arr.push(nuevoS);
+                                                            }
+                                                            $$ = new Declaracion($1, arr, @1.first_line, @1.first_column);
+                                                        }
+                                                    }
+            |   tipo IDENTIFICADOR IGUAL expresion  { $$ = new Declaracion($1, new Simbolo(1,null,$2,$4), @1.first_line, @1.first_column); }
             ;
 
-ListaId:        ListaId COMA IDENTIFICADOR
-        |       IDENTIFICADOR
+ListaId:        ListaId COMA IDENTIFICADOR          { $$ = $1; $1.push($3); }
+        |       IDENTIFICADOR                       { $$ = new Array(); $$.push($1);
+                                                        /*if($1.type === 0){
+                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo("",@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
+                                                        }else if($1.type === 1){
+                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo(0,@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
+                                                        }else if($1.type === 2){
+                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo(0.0,@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
+                                                        }else if($1.type === 3){
+                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo(true,@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
+                                                        }else if($1.type === 4){
+                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo('\0',@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
+                                                        }*/
+                                                    }   
         ;
 
-tipo:           INT
-    |           DOUBLE
-    |           BOOLEAN
-    |           CHAR
-    |           STRING
+tipo:           INT         { $$ = new Tipo('INT'); console.log('Se reconocio rint'); }
+    |           DOUBLE      { $$ = new Tipo('DOUBLE'); console.log('Se reconocio rdouble'); }
+    |           BOOLEAN     { $$ = new Tipo('BOOL'); console.log('Se reconocio rbool'); }
+    |           CHAR        { $$ = new Tipo('CHAR'); console.log('Se reconocio rchar'); }
+    |           STRING      { $$ = new Tipo('STRING'); console.log('Se reconocio rstring'); }
     ;
 
 asignacion:     IDENTIFICADOR IGUAL expresion
             ;
 
-imprimir:       PRINT PARA expresion PARC       { $$ = new Print($3, @1.first_line, @1.last_column);}
-            |   PRINTLN PARA expresion PARC     { $$ = new Print($3, @1.first_line, @1.last_column);}
+imprimir:       PRINT PARA expresion PARC       { console.log('print'); $$ = new Print($3, @1.first_line, @1.last_column);}
+            |   PRINTLN PARA expresion PARC     { console.log('print'); $$ = new Print($3, @1.first_line, @1.last_column);}
             ;
 
 if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC
@@ -301,14 +357,14 @@ pop_instr:      IDENTIFICADOR PUNTO POP PARA PARC
 
 /* EXPRESIONES */
 expresion:      MENOS expresion %prec UNARIO
-            |   NOT expresion
-            |   expresion_log
-            |   expresion_rel
-            |   expresion_arit
+            |   expresion_log           { $$ = $1; }
+            |   expresion_rel           { $$ = $1; }
+            |   expresion_arit          { $$ = $1; }
+            |   expresion_cadena        { $$ = $1; }
             |   expr_nativa
             |   expresion_cad
             |   expresion_cast
-            |   PARA expresion PARC
+            |   PARA expresion PARC     { $$ = $2; }
             |   DECIMAL                 { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
             |   ENTERO                  { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
             |   CADENA                  { $$ = new Primitivo($1, @1.first_line, @1.first_column); }
@@ -316,30 +372,32 @@ expresion:      MENOS expresion %prec UNARIO
             |   TRUE                    { $$ = new Primitivo(true, @1.first_line, @1.first_column); }
             |   FALSE                   { $$ = new Primitivo(false, @1.first_line, @1.first_column); }
             |   NULL                    { $$ = new Primitivo(null, @1.first_line, @1.first_column); }
-            |   IDENTIFICADOR
+            |   IDENTIFICADOR           { $$ = new Identificador($1, @1.first_line, @1.first_column); }
             |   IDENTIFICADOR INCRE
             |   IDENTIFICADOR DECRE
             |   acceso_arr
             |   llamada_instr /*ASIGNAR A UNA VARIABLE EL VALOR DE UNA FUNCION CON RETORNO*/
             ;
 
-expresion_arit: expresion MAS expresion
-            |   expresion MENOS expresion
-            |   expresion MULTI expresion
-            |   expresion DIV expresion
-            |   expresion MOD expresion
+expresion_arit: expresion MAS expresion         { $$ = new Aritmetica($1, '+', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MENOS expresion       { $$ = new Aritmetica($1, '-', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MULTI expresion       { $$ = new Aritmetica($1, '*', $3, @1.first_line, @1.first_column, false); }
+            |   expresion DIV expresion         { $$ = new Aritmetica($1, '/', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MOD expresion         { $$ = new Aritmetica($1, '%', $3, @1.first_line, @1.first_column, false); }
+            |   expresion CONCATENACION expresion
             ;
 
-expresion_rel:  expresion MENORQ expresion
-            |   expresion MENORIGUAL expresion
-            |   expresion MAYORQ expresion
-            |   expresion MAYORIGUAL expresion
-            |   expresion IGUALIGUAL expresion
-            |   expresion DIFERENCIA expresion
+expresion_rel:  expresion MENORQ expresion      { $$ = new Relacional($1, '<',  $3, @1.first_line, @1.first_column, false); }
+            |   expresion MENORIGUAL expresion  { $$ = new Relacional($1, '<=', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MAYORQ expresion      { $$ = new Relacional($1, '>',  $3, @1.first_line, @1.first_column, false); }
+            |   expresion MAYORIGUAL expresion  { $$ = new Relacional($1, '>=', $3, @1.first_line, @1.first_column, false); }
+            |   expresion IGUALIGUAL expresion  { $$ = new Relacional($1, '==', $3, @1.first_line, @1.first_column, false); }
+            |   expresion DIFERENCIA expresion  { $$ = new Relacional($1, '!=', $3, @1.first_line, @1.first_column, false); }
             ;
 
-expresion_log:  expresion AND expresion
-            |   expresion OR expresion
+expresion_log:  expresion AND expresion         { $$ = Logica($1, '&&', $3,  @1.first_line, @1.first_column, false); }
+            |   expresion OR expresion          { $$ = Logica($1, '||', $3,  @1.first_line, @1.first_column, false); }
+            |   NOT expresion                   { $$ = Logica($1, '!', null, @1.first_line, @1.first_column, false); }
             ;
 
 expr_nativa:    SQRT PARA expresion PARC 

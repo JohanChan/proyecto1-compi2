@@ -3,11 +3,11 @@ export enum tipo {
     INT,
     DOUBLE,
     BOOL,
+    CARACTER,
     VOID,
     STRUCT,
     ATRIBUTO,
-    ARRAY,
-    CARACTER
+    ARRAY
 }
 
 export class Tipo{

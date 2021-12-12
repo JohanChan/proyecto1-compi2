@@ -4,9 +4,8 @@ import {Controlador} from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
-import {Tipo, tipo} from "../TablaSimbolos/Tipo";
 
-export default class Asignacion implements Instruccion{
+export class Asignacion implements Instruccion{
 
     public id: string;
     public valor: Expresion;
@@ -19,24 +18,26 @@ export default class Asignacion implements Instruccion{
         this.id= id;
         this.valor= valor;
     }
+    linea: number;
     
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
-        if(tabla.existe(this.id)){
-            let aux = this.valor.getValor(controlador,tabla);
+        console.log('Aqui asignando :V');
+        /*if(tabla.existe(this.id)){
+            let aux = this.valor.getValorImplicito(controlador,tabla);
             //console.log(aux);
             let atipo = this.valor.getTipo(controlador, tabla);
             let auxTipo = tabla.getSimbolo(this.id)?.tipo;
-            //console.log(auxTipo.type, atipo);
+            console.log(auxTipo, atipo);
             if(auxTipo?.type === atipo || (auxTipo?.stype === 'ENTERO' && atipo === 1) || (auxTipo.type == 3 && atipo == 4)){
                 tabla.getSimbolo(this.id)?.setValor(aux);
             }else{
-                controlador.errores.push(new Errores('Semantico',`Valor a asignar no es compatible con ${this.id}`,this.fila, this.columna));
+                //controlador.errores.push(new Errores('Semantico',`Valor a asignar no es compatible con ${this.id}`,this.fila, this.columna));
                 controlador.concatenar(`Error Semantico: Valor a asignar no es compatible con ${this.id}, fila: ${this.fila} columna: ${this.columna}`);
             }
         }else{
-            controlador.errores.push(new Errores('Semantico',`Variable ${this.id} no existe`,this.fila, this.columna));
+            //controlador.errores.push(new Errores('Semantico',`Variable ${this.id} no existe`,this.fila, this.columna));
             controlador.concatenar(`Error Semantico: Variable ${this.id} no existe, fila: ${this.fila} columna: ${this.columna}`);
-        }
+        }*/
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos){
@@ -44,13 +45,13 @@ export default class Asignacion implements Instruccion{
     }
 
     recorrer(): Nodo {
-        let raiz = new Nodo('Asignacion','');
+        /*let raiz = new Nodo('Asignacion','');
         raiz.agregarHijo(new Nodo(this.id,''),);
         raiz.agregarHijo(new Nodo('=',''));        
         raiz.agregarHijo(this.valor.recorrer());
-        return raiz;
+        return raiz;*/
         
-        //throw new Error("Method not implemented.");
+        throw new Error("Method not implemented.");
     }
 
     

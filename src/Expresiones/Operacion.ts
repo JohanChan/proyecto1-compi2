@@ -2,6 +2,7 @@ import { AST } from "../AST/AST";
 import { Entorno } from "../AST/Entorno";
 import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
+import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
 
 
@@ -37,7 +38,7 @@ export class Operacion implements Expresion{
     constructor(expIzq, operador, expDer, linea, columna, esUnario){
         this.expIzq = expIzq;
         this.exprDer=expDer;
-        this.operador = operador;
+        this.operador = this.getOperador(operador);
         this.linea = linea;
         this.columna = columna;
         this.esUnario = esUnario;
@@ -64,13 +65,13 @@ export class Operacion implements Expresion{
             case '^': return Operador.REPETICION; break;
         }
     }
-    getTipo(controlador: Controlador, arbol: AST): tipo {
+    getTipo(controlador: Controlador, tabla:TablaSimbolos): tipo {
         throw new Error("Method not implemented.");
     }
-    getValorImplicito(controlador: Controlador, arbol: AST) {
+    getValorImplicito(controlador: Controlador, tabla:TablaSimbolos) {
         throw new Error("Method not implemented.");
     }
-    traducir(controlador: Controlador, arbol: AST) {
+    traducir(controlador: Controlador, tabla:TablaSimbolos) {
         throw new Error("Method not implemented.");
     }
     
