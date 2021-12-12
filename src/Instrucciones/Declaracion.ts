@@ -34,7 +34,6 @@ export class Declaracion implements Instruccion{
                 console.log(tip, this.type.type);
                 if(tip === this.type.type || (tip === tipo.INT && this.type.type === tipo.DOUBLE) || (tip === tipo.STRING && this.type.type === tipo.CARACTER)){
                     let nuevo = new Simbolo(simbol.simbolo, this.type, simbol.indentificador, valor);
-                    console.log('Se agrega '+nuevo);
                     tabla.agregar(simbol.indentificador, nuevo);
                 }
             }else{

@@ -22,15 +22,11 @@ export class Asignacion implements Instruccion{
 
     
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
-        console.log('Aqui asignando :V');
         if(tabla.existe(this.id)){
             let aux = this.valor.getValorImplicito(controlador,tabla);
             let tip = this.valor.getTipo(controlador,tabla);
             let auxTipo = tabla.getSimbolo(this.id).tipo; 
-            console.log('=========')
-            console.log(tip, auxTipo.type);
-            console.log('=========')
-            if(auxTipo.type === tip || (auxTipo.type === tipo.DOUBLE && tip === tipo.INT) || (auxTipo.type === tipo.CARACTER && tip === tipo.STRING)){
+            if(auxTipo.type === tip || (auxTipo.type === tipo.DOUBLE && tip === tipo.INT) || (auxTipo.type === tipo.CARACTER && tip === tipo.STRING) || (auxTipo.type === tipo.INT && tip === tipo.DOUBLE)){
                 tabla.getSimbolo(this.id).setValor(aux);
             }else{
                 console.log('Error semantico: variable no compatible');
