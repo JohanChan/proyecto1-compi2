@@ -32,7 +32,7 @@ export class Declaracion implements Instruccion{
                 let valor = simbol.valor.getValorImplicito(controlador,tabla);
                 let tip = simbol.valor.getTipo(controlador,tabla);
                 console.log(tip, this.type.type);
-                if(tip === this.type.type || (tip === tipo.DOUBLE && this.type.type === tipo.INT) || (tip === tipo.STRING && this.type.type === tipo.CARACTER)){
+                if(tip === this.type.type || (tip === tipo.INT && this.type.type === tipo.DOUBLE) || (tip === tipo.STRING && this.type.type === tipo.CARACTER)){
                     let nuevo = new Simbolo(simbol.simbolo, this.type, simbol.indentificador, valor);
                     console.log('Se agrega '+nuevo);
                     tabla.agregar(simbol.indentificador, nuevo);

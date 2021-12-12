@@ -30,7 +30,7 @@ export class Asignacion implements Instruccion{
             console.log('=========')
             console.log(tip, auxTipo.type);
             console.log('=========')
-            if(auxTipo.type === tip || (auxTipo.type === tipo.INT && tip === tipo.DOUBLE) || (auxTipo.type === tipo.CARACTER && tip === tipo.STRING)){
+            if(auxTipo.type === tip || (auxTipo.type === tipo.DOUBLE && tip === tipo.INT) || (auxTipo.type === tipo.CARACTER && tip === tipo.STRING)){
                 tabla.getSimbolo(this.id).setValor(aux);
             }else{
                 console.log('Error semantico: variable no compatible');
