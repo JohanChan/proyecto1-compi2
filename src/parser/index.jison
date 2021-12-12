@@ -160,6 +160,12 @@ caracter (\'({escape2}|{acepta2})\')
     const { For } = require('../Instrucciones/SenteciasCiclicas/For');
     const { While } = require('../Instrucciones/SenteciasCiclicas/While');
     const { DoWhile } = require('../Instrucciones/SenteciasCiclicas/DoWhile');
+    
+    const If = require('src/Clases/Instrucciones/SentenciaDeControl/If');
+    const detener = require('src/Clases/Instrucciones/SentenciaTransferencia/Detener');
+    const continuar = require('src/Clases/Instrucciones/SentenciaTransferencia/Continuar');
+    const retornar = require('src/Clases/Instrucciones/SentenciaTransferencia/Retornar');
+    
 %}
 
 /* Precedencia de operadores */
@@ -283,10 +289,10 @@ imprimir:       PRINT PARA expresion PARC       { console.log('print'); $$ = new
             |   PRINTLN PARA expresion PARC     { console.log('print'); $$ = new Print($3, @1.first_line, @1.last_column);}
             ;
 
-if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC
-            |   IF PARA expresion PARC instruccion 
-            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE LLAVEA instrucciones LLAVEC
-            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instruccion
+if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC                                  { $$ = new If.default($3, $6, [], @1.first_line, @1.last_column); }
+            |   IF PARA expresion PARC instruccion                                                  { $$ = new If.default($3, $5, [], @1.first_line, @1.last_column); }
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE LLAVEA instrucciones LLAVEC { $$ = new If.default($3, $6, $10, @1.first_line, @1.last_column); }
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instruccion                 { $$ = new If.default($3, $6, $9, @1.first_line, @1.last_column); }
             /*|   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE if_instr*/
             ;
 
