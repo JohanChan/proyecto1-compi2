@@ -242,7 +242,11 @@ declaracion:    tipo ListaId                        {
                                                             $$ = new Declaracion($1, arr, @1.first_line, @1.first_column);
                                                         }
                                                     }
-            |   tipo IDENTIFICADOR IGUAL expresion  { $$ = new Declaracion($1, new Simbolo(1,null,$2,$4), @1.first_line, @1.first_column); }
+            |   tipo IDENTIFICADOR IGUAL expresion  { 
+                                                        let arr = new Array();
+                                                        arr.push(new Simbolo(1,null,$2,$4));
+                                                        $$ = new Declaracion($1, arr, @1.first_line, @1.first_column); 
+                                                    }
             ;
 
 ListaId:        ListaId COMA IDENTIFICADOR          { $$ = $1; $1.push($3); }
@@ -268,7 +272,7 @@ tipo:           INT         { $$ = new Tipo('INT'); console.log('Se reconocio ri
     |           STRING      { $$ = new Tipo('STRING'); console.log('Se reconocio rstring'); }
     ;
 
-asignacion:     IDENTIFICADOR IGUAL expresion
+asignacion:     IDENTIFICADOR IGUAL expresion   { $$ = new Asignacion($1, $3, @1.first_line, @1.first_column); }
             ;
 
 imprimir:       PRINT PARA expresion PARC       { console.log('print'); $$ = new Print($3, @1.first_line, @1.last_column);}

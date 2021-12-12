@@ -4,40 +4,40 @@ import {Controlador} from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
+import { tipo } from "../TablaSimbolos/Tipo";
 
 export class Asignacion implements Instruccion{
 
     public id: string;
     public valor: Expresion;
-    public fila: number;
+    public linea: number;
     public columna: number;
 
     constructor(id: string, valor: Expresion, fila: number, columna:number){
         this.columna= columna;
-        this.fila= fila;
+        this.linea= fila;
         this.id= id;
         this.valor= valor;
     }
-    linea: number;
+
     
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
         console.log('Aqui asignando :V');
-        /*if(tabla.existe(this.id)){
+        if(tabla.existe(this.id)){
             let aux = this.valor.getValorImplicito(controlador,tabla);
-            //console.log(aux);
-            let atipo = this.valor.getTipo(controlador, tabla);
-            let auxTipo = tabla.getSimbolo(this.id)?.tipo;
-            console.log(auxTipo, atipo);
-            if(auxTipo?.type === atipo || (auxTipo?.stype === 'ENTERO' && atipo === 1) || (auxTipo.type == 3 && atipo == 4)){
-                tabla.getSimbolo(this.id)?.setValor(aux);
+            let tip = this.valor.getTipo(controlador,tabla);
+            let auxTipo = tabla.getSimbolo(this.id).tipo; 
+            console.log('=========')
+            console.log(tip, auxTipo.type);
+            console.log('=========')
+            if(auxTipo.type === tip || (auxTipo.type === tipo.INT && tip === tipo.DOUBLE) || (auxTipo.type === tipo.CARACTER && tip === tipo.STRING)){
+                tabla.getSimbolo(this.id).setValor(aux);
             }else{
-                //controlador.errores.push(new Errores('Semantico',`Valor a asignar no es compatible con ${this.id}`,this.fila, this.columna));
-                controlador.concatenar(`Error Semantico: Valor a asignar no es compatible con ${this.id}, fila: ${this.fila} columna: ${this.columna}`);
+                console.log('Error semantico: variable no compatible');
             }
         }else{
-            //controlador.errores.push(new Errores('Semantico',`Variable ${this.id} no existe`,this.fila, this.columna));
-            controlador.concatenar(`Error Semantico: Variable ${this.id} no existe, fila: ${this.fila} columna: ${this.columna}`);
-        }*/
+            console.log('variable no existe');
+        }
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos){

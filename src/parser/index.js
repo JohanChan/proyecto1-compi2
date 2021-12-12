@@ -145,7 +145,11 @@ case 22:
                                                     
 break;
 case 23:
- this.$ = new Declaracion($$[$0-3], new Simbolo(1,null,$$[$0-2],$$[$0]), _$[$0-3].first_line, _$[$0-3].first_column); 
+ 
+                                                        let arr = new Array();
+                                                        arr.push(new Simbolo(1,null,$$[$0-2],$$[$0]));
+                                                        this.$ = new Declaracion($$[$0-3], arr, _$[$0-3].first_line, _$[$0-3].first_column); 
+                                                    
 break;
 case 24:
  this.$ = $$[$0-2]; $$[$0-2].push($$[$0]); 
@@ -179,6 +183,9 @@ case 29:
 break;
 case 30:
  this.$ = new Tipo('STRING'); console.log('Se reconocio rstring'); 
+break;
+case 31:
+ this.$ = new Asignacion($$[$0-2], $$[$0], _$[$0-2].first_line, _$[$0-2].first_column); 
 break;
 case 32: case 33:
  console.log('print'); this.$ = new Print($$[$0-1], _$[$0-3].first_line, _$[$0-3].last_column);
