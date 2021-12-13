@@ -23,7 +23,18 @@ export enum Operador{
     IGUALIGUAL,
     DIFERENTE,
     REPETICION,
-    CONCATENACION
+    CONCATENACION,
+    POTENCIA,
+    RAIZCUADRADA,
+    SENO,
+    COSENO,
+    TANGENTE,
+    LOG10,
+    CHARPOSITION,
+    SUBSTRING,
+    LENGTH,
+    UPPERCASE,
+    LOWERCASE
 }
 
 export class Operacion implements Expresion{
@@ -63,6 +74,17 @@ export class Operacion implements Expresion{
             case '!': return Operador.NOT; break;
             case '&': return Operador.CONCATENACION; break;
             case '^': return Operador.REPETICION; break;
+            case 'pow': return Operador.POTENCIA; break;
+            case 'sqrt': return Operador.RAIZCUADRADA; break;
+            case 'sin': return Operador.SENO; break;
+            case 'cos': return Operador.COSENO; break;
+            case 'tan': return Operador.TANGENTE; break;
+            case 'log10': return Operador.LOG10; break;
+            case 'charposition': return Operador.CHARPOSITION; break;
+            case 'substring': return Operador.SUBSTRING; break;
+            case 'legth': return Operador.LENGTH; break;
+            case 'uppercase': return Operador.UPPERCASE; break;
+            case 'lowercase': return Operador.LOWERCASE; break;
         }
     }
     getTipo(controlador: Controlador, tabla:TablaSimbolos): tipo {
