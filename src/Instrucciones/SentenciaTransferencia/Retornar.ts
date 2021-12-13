@@ -4,7 +4,7 @@ import { Expresion } from "../../Interfaces/Expresion";
 import { Instruccion } from "../../Interfaces/Instruccion";
 import { TablaSimbolos } from "../../TablaSimbolos/TablaSimbolos";
 
-export default class Retonar implements Instruccion{
+export class Retonar implements Instruccion{
     public linea: number;
     public columna: number;
     public retorno: Expresion;

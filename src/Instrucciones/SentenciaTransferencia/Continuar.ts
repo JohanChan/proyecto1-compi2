@@ -3,7 +3,7 @@ import {Controlador} from "../../Controlador";
 import { Instruccion } from "../../Interfaces/Instruccion";
 import { TablaSimbolos } from "../../TablaSimbolos/TablaSimbolos";
 
-export default class Continuar implements Instruccion{
+export class Continuar implements Instruccion{
     public linea: number;
     public columna: number;
     constructor(){}

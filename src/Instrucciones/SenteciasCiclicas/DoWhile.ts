@@ -2,6 +2,8 @@ import { Controlador } from "../../Controlador";
 import { Expresion } from "../../Interfaces/Expresion";
 import { Instruccion } from "../../Interfaces/Instruccion";
 import { TablaSimbolos } from "../../TablaSimbolos/TablaSimbolos";
+import {Continuar} from "../SentenciaTransferencia/Continuar";
+import {Detener} from "../SentenciaTransferencia/Detener";
 
 export class While implements Instruccion{
     public linea: number;
@@ -23,6 +25,12 @@ export class While implements Instruccion{
                 let tablaLocal = new TablaSimbolos(tabla);
                 for(let instruccion of this.listadoInstrucciones){
                     let resultado = instruccion.ejecutar(controlador,tablaLocal);
+                    if(instruccion instanceof Detener || resultado instanceof Detener){
+                        return resultado;
+                    }
+                    if(instruccion instanceof Continuar || resultado instanceof Continuar){
+                        continue sig;
+                    }
                 }
             }while(this.condicion.getValorImplicito(controlador,tabla));
         }

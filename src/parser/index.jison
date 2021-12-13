@@ -160,12 +160,11 @@ caracter (\'({escape2}|{acepta2})\')
     const { For } = require('../Instrucciones/SenteciasCiclicas/For');
     const { While } = require('../Instrucciones/SenteciasCiclicas/While');
     const { DoWhile } = require('../Instrucciones/SenteciasCiclicas/DoWhile');
-    
-    const { If } = require('../Instrucciones/SentenciaDeControl/If');
+
+    const { If } = require('../Instrucciones/SentenciasDeControl/If');
     const { Detener } = require('../Instrucciones/SentenciaTransferencia/Detener');
     const { Continuar } = require('../Instrucciones/SentenciaTransferencia/Continuar');
-    const { Retornar } = require('..s/Instrucciones/SentenciaTransferencia/Retornar');
-    
+    const { Retornar } = require('../Instrucciones/SentenciaTransferencia/Retornar');
 %}
 
 /* Precedencia de operadores */
@@ -200,8 +199,10 @@ instruccion:    declaracion PYC         { $$ = $1; }
             |   dowhile_instr PYC       { $$ = $1; }
             |   for_instr               { $$ = $1; }
             |   actualizar PYC          { $$ = $1; }
-            |   break_instr PYC         { $$ = $1; }
-            |   continue_instr PYC      { $$ = $1; }
+            |   BREAK PYC               { $$ = new Detener(); }
+            |   CONTINUE PYC            { $$ = new Continuar(); }
+            |   RETURN PYC              { $$ = new Retornar(null); }
+            |   RETURN expresion PYC    { $$ = new Retornar($2); }
             |   funcion_instr           { $$ = $1; }
             |   llamada_instr PYC       { $$ = $1; }
             |   return_instr PYC        { $$ = $1; }
@@ -260,19 +261,7 @@ declaracion:    tipo ListaId                        {
             ;
 
 ListaId:        ListaId COMA IDENTIFICADOR          { $$ = $1; $1.push($3); }
-        |       IDENTIFICADOR                       { $$ = new Array(); $$.push($1);
-                                                        /*if($1.type === 0){
-                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo("",@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
-                                                        }else if($1.type === 1){
-                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo(0,@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
-                                                        }else if($1.type === 2){
-                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo(0.0,@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
-                                                        }else if($1.type === 3){
-                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo(true,@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
-                                                        }else if($1.type === 4){
-                                                            $$ = new Declaracion($1, new Simbolo(1, null, $2, new Primitivo('\0',@1.first_line,@1.first_column)), @1.first_line, @1.first_column);
-                                                        }*/
-                                                    }   
+        |       IDENTIFICADOR                       { $$ = new Array(); $$.push($1); }   
         ;
 
 tipo:           INT         { $$ = new Tipo('INT'); console.log('Se reconocio rint'); }
@@ -289,10 +278,10 @@ imprimir:       PRINT PARA expresion PARC       { console.log('print'); $$ = new
             |   PRINTLN PARA expresion PARC     { console.log('print'); $$ = new Print($3, @1.first_line, @1.last_column);}
             ;
 
-if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC                                  { $$ = new If.default($3, $6, [], @1.first_line, @1.last_column); }
-            |   IF PARA expresion PARC instruccion                                                  { $$ = new If.default($3, $5, [], @1.first_line, @1.last_column); }
-            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE LLAVEA instrucciones LLAVEC { $$ = new If.default($3, $6, $10, @1.first_line, @1.last_column); }
-            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instruccion                 { $$ = new If.default($3, $6, $9, @1.first_line, @1.last_column); }
+if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC                                  { $$ = new If($3, $6, [], @1.first_line, @1.last_column); }
+            |   IF PARA expresion PARC instruccion                                                  { $$ = new If($3, $5, [], @1.first_line, @1.last_column); }
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE LLAVEA instrucciones LLAVEC { $$ = new If($3, $6, $10, @1.first_line, @1.last_column); }
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instruccion                 { $$ = new If($3, $6, $9, @1.first_line, @1.last_column); }
             /*|   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE if_instr*/
             ;
 
@@ -323,11 +312,6 @@ actualizar:     IDENTIFICADOR INCRE     { $$ = new Asignacion($1, new Aritmetica
             |   IDENTIFICADOR DECRE     { $$ = new Asignacion($1, new Aritmetica(new Identificador($1, @1.first_line, @1.first_column), '-', new Primitivo(1, @1.first_line, @1.last_column),@1.first_line, @1.last_column, false), @1.first_line, @1.last_column); }
 
             ;
-break_instr:    BREAK
-            ;
-
-continue_instr: CONTINUE
-            ;
 
 /* DECLARACION DE UNA FUNCION */
 funcion_instr:  VOID IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC
@@ -347,10 +331,6 @@ llamada_instr:  IDENTIFICADOR PARA parametros_llamada PARC
 
 parametros_llamada: parametros_llamada COMA expresion
             |   expresion
-            ;
-
-return_instr:   RETURN expresion
-            |   RETURN
             ;
 
 /* DECLARACION DE ARREGLOS */
