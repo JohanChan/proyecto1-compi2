@@ -4,11 +4,11 @@ import { Expresion } from "../../Interfaces/Expresion";
 import { Instruccion } from "../../Interfaces/Instruccion";
 import { TablaSimbolos } from "../../TablaSimbolos/TablaSimbolos";
 import {Tipo, tipo} from "../../TablaSimbolos/Tipo"
-import Continuar from "../SentenciaTransferencia/Continuar";
-import Detener from "../SentenciaTransferencia/Detener";
-import Retonar from "../SentenciaTransferencia/Retornar";
+import {Continuar} from "../SentenciaTransferencia/Continuar";
+import {Detener} from "../SentenciaTransferencia/Detener";
+import {Retonar} from "../SentenciaTransferencia/Retornar";
 
-export default class If implements Instruccion{
+export class If implements Instruccion{
     
     public condicion: Expresion;
     public listadoIf: Array<Instruccion>;
@@ -23,7 +23,7 @@ export default class If implements Instruccion{
         this.linea = fila;
         this.columna = columna;
     }
-
+    
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
         console.log("Esta ejecutando el if");
         let tablaLocal = new TablaSimbolos(tabla);
