@@ -150,6 +150,8 @@ caracter (\'({escape2}|{acepta2})\')
     const { Logica } = require('../Expresiones/Logica');
     const { Relacional } = require('../Expresiones/Relacional');
     const { Aritmetica } = require('../Expresiones/Aritmetica');
+    const { NativaAritmetica } = require('../Expresiones/NativaAritmetica');
+    const { NativaCadena } = require('../Expresiones/NativaCadena');
     const { Tipo } = require('../TablaSimbolos/Tipo');
     const { Cadena } = require('../Expresiones/Cadena');
     const { AST } = require('../AST/AST');
@@ -314,10 +316,10 @@ actualizar:     IDENTIFICADOR INCRE     { $$ = new Asignacion($1, new Aritmetica
             ;
 
 /* DECLARACION DE UNA FUNCION */
-funcion_instr:  VOID IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC
-            |   VOID IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC
-            |   tipo IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC
-            |   tipo IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC
+funcion_instr:  VOID IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC     {}
+            |   VOID IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC                {}
+            |   tipo IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC     {}
+            |   tipo IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC                {}
             ; 
 
 parametros:     parametros COMA tipo IDENTIFICADOR
@@ -375,12 +377,13 @@ expresion:      MENOS expresion %prec UNARIO
             |   llamada_instr /*ASIGNAR A UNA VARIABLE EL VALOR DE UNA FUNCION CON RETORNO*/
             ;
 
-expresion_arit: expresion MAS expresion         { $$ = new Aritmetica($1, '+', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MENOS expresion       { $$ = new Aritmetica($1, '-', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MULTI expresion       { $$ = new Aritmetica($1, '*', $3, @1.first_line, @1.first_column, false); }
-            |   expresion DIV expresion         { $$ = new Aritmetica($1, '/', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MOD expresion         { $$ = new Aritmetica($1, '%', $3, @1.first_line, @1.first_column, false); }
-            |   expresion CONCATENACION expresion
+expresion_arit: expresion MAS expresion             { $$ = new Aritmetica($1, '+', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MENOS expresion           { $$ = new Aritmetica($1, '-', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MULTI expresion           { $$ = new Aritmetica($1, '*', $3, @1.first_line, @1.first_column, false); }
+            |   expresion DIV expresion             { $$ = new Aritmetica($1, '/', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MOD expresion             { $$ = new Aritmetica($1, '%', $3, @1.first_line, @1.first_column, false); }
+            |   expresion CONCATENACION expresion   { $$ = new Cadena($1, '&', $3, @1.first_line, @1.first_column, false); }
+            |   expresion REPETICION expresion      { $$ = new Cadena($1, '^', $3, @1.first_line, @1.first_column, false); }
             ;
 
 expresion_rel:  expresion MENORQ expresion      { $$ = new Relacional($1, '<',  $3, @1.first_line, @1.first_column, false); }
@@ -391,30 +394,31 @@ expresion_rel:  expresion MENORQ expresion      { $$ = new Relacional($1, '<',  
             |   expresion DIFERENCIA expresion  { $$ = new Relacional($1, '!=', $3, @1.first_line, @1.first_column, false); }
             ;
 
-expresion_log:  expresion AND expresion         { $$ = Logica($1, '&&', $3,  @1.first_line, @1.first_column, false); }
-            |   expresion OR expresion          { $$ = Logica($1, '||', $3,  @1.first_line, @1.first_column, false); }
-            |   NOT expresion                   { $$ = Logica($1, '!', null, @1.first_line, @1.first_column, false); }
+expresion_log:  expresion AND expresion         { $$ = new Logica($1, '&&', $3,  @1.first_line, @1.first_column, false); }
+            |   expresion OR expresion          { $$ = new Logica($1, '||', $3,  @1.first_line, @1.first_column, false); }
+            |   NOT expresion                   { $$ = new Logica($1, '!', null, @1.first_line, @1.first_column, false); }
             ;
 
-expr_nativa:    SQRT PARA expresion PARC 
-            |   SIN PARA expresion PARC 
-            |   COS PARA expresion PARC 
-            |   TAN PARA expresion PARC 
-            |   LOG10 PARA expresion PARC 
+expr_nativa:    SQRT PARA expresion PARC                { $$ = new NativaAritmetica($3, 'sqrt', null, @1.first_line, @1.first_column); }
+            |   SIN PARA expresion PARC                 { $$ = new NativaAritmetica($3, 'sin', null, @1.first_line, @1.first_column); }
+            |   COS PARA expresion PARC                 { $$ = new NativaAritmetica($3, 'cos', null, @1.first_line, @1.first_column); }
+            |   TAN PARA expresion PARC                 { $$ = new NativaAritmetica($3, 'tan', null, @1.first_line, @1.first_column); }
+            |   LOG10 PARA expresion PARC               { $$ = new NativaAritmetica($3, 'log10', null, @1.first_line, @1.first_column); }
+            |   POW PARA expresion COMA expresion PARC  { $$ = new NativaAritmetica($3, 'pow', $5, @1.first_line, @1.first_column); }
             ;
 
-expresion_cad:  IDENTIFICADOR PUNTO CARACTEROFPOSITION PARA ENTERO PARC
-            |   IDENTIFICADOR PUNTO SUBSTRING PARA ENTERO COMA ENTERO PARC
-            |   IDENTIFICADOR PUNTO LENGTH PARA PARC
-            |   IDENTIFICADOR PUNTO TOUPPERCASE PARA PARC
-            |   IDENTIFICADOR PUNTO TOLOWERCASE PARA PARC
+expresion_cad:  IDENTIFICADOR PUNTO CARACTEROFPOSITION PARA ENTERO PARC         { $$ = new NativaCadena($1, 'charposition', @1.first_line, @1.first_column, Number($5), -1) }
+            |   IDENTIFICADOR PUNTO SUBSTRING PARA ENTERO COMA ENTERO PARC      
+            |   IDENTIFICADOR PUNTO LENGTH PARA PARC                            { $$ = new NativaCadena($1, 'length', @1.first_line, @1.first_column, -1, -1) }                          
+            |   IDENTIFICADOR PUNTO TOUPPERCASE PARA PARC                       
+            |   IDENTIFICADOR PUNTO TOLOWERCASE PARA PARC                       
             ;
 
-expresion_cast: tipo PUNTO PARSE PARA expresion PARC
-            |   TOINT PARA expresion PARC
-            |   TODOUBLE PARA expresion PARC
-            |   TYPEOF PARA expresion PARC
-            |   STRING_CAST PARA expresion PARC
+expresion_cast: tipo PUNTO PARSE PARA expresion PARC                            {  }
+            |   TOINT PARA expresion PARC                                       {  }
+            |   TODOUBLE PARA expresion PARC                                    {  }
+            |   TYPEOF PARA expresion PARC                                      {  }
+            |   STRING_CAST PARA expresion PARC                                 {  }
             ;
 
 acceso_arr:     IDENTIFICADOR CORA expresion CORC /*OBTENER VALOR EN POSICION DE ARREGLO*/
