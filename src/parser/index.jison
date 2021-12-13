@@ -167,10 +167,13 @@ caracter (\'({escape2}|{acepta2})\')
     const { Detener } = require('../Instrucciones/SentenciaTransferencia/Detener');
     const { Continuar } = require('../Instrucciones/SentenciaTransferencia/Continuar');
     const { Retornar } = require('../Instrucciones/SentenciaTransferencia/Retornar');
+    const { Caso } = require('../Instrucciones/SentenciasDeControl/Case');
+    const { Switch } = require('../Instrucciones/SentenciasDeControl/Switch');
+    const { Ternario } = require('../Expresiones/Ternario');
 %}
 
 /* Precedencia de operadores */
-
+%left 'INTERRC'
 %left 'OR'
 %left 'AND'
 %right 'NOT'
@@ -287,16 +290,18 @@ if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC              
             /*|   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE if_instr*/
             ;
 
-switch_instr:   SWITCH PARA expresion PARC LLAVEA listaCases default_instr LLAVEC   
-            |   SWITCH PARA expresion PARC LLAVEA listaCases LLAVEC       
-            |   SWITCH PARA expresion PARC LLAVEA default_instr LLAVEC             
+
+
+switch_instr:   SWITCH PARA expresion PARC LLAVEA listaCases default_instr LLAVEC       { $$ = new Switch($3,$6,$7); }
+            |   SWITCH PARA expresion PARC LLAVEA listaCases LLAVEC                     { $$ = new Switch($3,$6,null); }
+            |   SWITCH PARA expresion PARC LLAVEA default_instr LLAVEC                  { $$ = new Switch($3,null,$7); }              
             ;
 
-listaCases:     listaCases CASE expresion DOSP instrucciones 
-            |   CASE expresion DOSP instrucciones              
+listaCases:     listaCases CASE expresion DOSP instrucciones        { $$ = $1; $$.push( new Caso($3,$5)); }
+            |   CASE expresion DOSP instrucciones                   { $$ = new Array(); $$.push( new Caso($2,$4)); } 
             ;
 
-default_instr:  DEFAULT DOSP instrucciones
+default_instr:  DEFAULT DOSP instrucciones      { $$ = $3; }
             ;
 
 while_instr:    WHILE PARA expresion PARC LLAVEA instrucciones LLAVEC       { $$ = new While($3, $6, @1.first_line, @1.first_column); }
@@ -316,10 +321,10 @@ actualizar:     IDENTIFICADOR INCRE     { $$ = new Asignacion($1, new Aritmetica
             ;
 
 /* DECLARACION DE UNA FUNCION */
-funcion_instr:  VOID IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC     {}
-            |   VOID IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC                {}
-            |   tipo IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC     {}
-            |   tipo IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC                {}
+funcion_instr:  VOID IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC
+            |   VOID IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC
+            |   tipo IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC
+            |   tipo IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC
             ; 
 
 parametros:     parametros COMA tipo IDENTIFICADOR
@@ -365,6 +370,7 @@ expresion:      MENOS expresion %prec UNARIO
             |   expresion_cad           { $$ = $1; }
             |   expresion_cast          { $$ = $1; }
             |   PARA expresion PARC     { $$ = $2; }
+            |   expresion INTERRC expresion DOSP expresion  { $$ = new Ternario($1,$3,$5,@1.first_line,@1.last_column); }
             |   DECIMAL                 { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
             |   ENTERO                  { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
             |   CADENA                  { $$ = new Primitivo($1, @1.first_line, @1.first_column); }
@@ -377,13 +383,12 @@ expresion:      MENOS expresion %prec UNARIO
             |   llamada_instr /*ASIGNAR A UNA VARIABLE EL VALOR DE UNA FUNCION CON RETORNO*/
             ;
 
-expresion_arit: expresion MAS expresion             { $$ = new Aritmetica($1, '+', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MENOS expresion           { $$ = new Aritmetica($1, '-', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MULTI expresion           { $$ = new Aritmetica($1, '*', $3, @1.first_line, @1.first_column, false); }
-            |   expresion DIV expresion             { $$ = new Aritmetica($1, '/', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MOD expresion             { $$ = new Aritmetica($1, '%', $3, @1.first_line, @1.first_column, false); }
-            |   expresion CONCATENACION expresion   { $$ = new Cadena($1, '&', $3, @1.first_line, @1.first_column, false); }
-            |   expresion REPETICION expresion      { $$ = new Cadena($1, '^', $3, @1.first_line, @1.first_column, false); }
+expresion_arit: expresion MAS expresion         { $$ = new Aritmetica($1, '+', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MENOS expresion       { $$ = new Aritmetica($1, '-', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MULTI expresion       { $$ = new Aritmetica($1, '*', $3, @1.first_line, @1.first_column, false); }
+            |   expresion DIV expresion         { $$ = new Aritmetica($1, '/', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MOD expresion         { $$ = new Aritmetica($1, '%', $3, @1.first_line, @1.first_column, false); }
+            |   expresion CONCATENACION expresion
             ;
 
 expresion_rel:  expresion MENORQ expresion      { $$ = new Relacional($1, '<',  $3, @1.first_line, @1.first_column, false); }
@@ -394,9 +399,9 @@ expresion_rel:  expresion MENORQ expresion      { $$ = new Relacional($1, '<',  
             |   expresion DIFERENCIA expresion  { $$ = new Relacional($1, '!=', $3, @1.first_line, @1.first_column, false); }
             ;
 
-expresion_log:  expresion AND expresion         { $$ = new Logica($1, '&&', $3,  @1.first_line, @1.first_column, false); }
-            |   expresion OR expresion          { $$ = new Logica($1, '||', $3,  @1.first_line, @1.first_column, false); }
-            |   NOT expresion                   { $$ = new Logica($1, '!', null, @1.first_line, @1.first_column, false); }
+expresion_log:  expresion AND expresion         { $$ = Logica($1, '&&', $3,  @1.first_line, @1.first_column, false); }
+            |   expresion OR expresion          { $$ = Logica($1, '||', $3,  @1.first_line, @1.first_column, false); }
+            |   NOT expresion                   { $$ = Logica($1, '!', null, @1.first_line, @1.first_column, false); }
             ;
 
 expr_nativa:    SQRT PARA expresion PARC                { $$ = new NativaAritmetica($3, 'sqrt', null, @1.first_line, @1.first_column); }
@@ -420,6 +425,7 @@ expresion_cast: tipo PUNTO PARSE PARA expresion PARC                            
             |   TYPEOF PARA expresion PARC                                      {  }
             |   STRING_CAST PARA expresion PARC                                 {  }
             ;
+
 
 acceso_arr:     IDENTIFICADOR CORA expresion CORC /*OBTENER VALOR EN POSICION DE ARREGLO*/
             |   IDENTIFICADOR CORA expresion DOSP expresion CORC
