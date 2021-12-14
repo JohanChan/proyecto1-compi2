@@ -434,3 +434,4 @@ acceso_arr:     IDENTIFICADOR CORA expresion CORC /*OBTENER VALOR EN POSICION DE
             |   IDENTIFICADOR CORA expresion DOSP END CORC
             |   NUMERAL IDENTIFICADOR /*COPIAR ARREGLO*/
             ;
+            
