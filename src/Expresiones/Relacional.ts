@@ -51,6 +51,8 @@ export class Relacional extends Operacion implements Expresion{
                     }else{
                         console.log('Error semantico: se esperaba valor tipo numero o string');
                     }
+                }else if(typeof valorIzq === 'string' && typeof valorDer === 'string'){
+                    return valorIzq === valorDer;
                 }else{
                     console.log('Error semantico: se esperaba valor tipo numero o string');
                 }
