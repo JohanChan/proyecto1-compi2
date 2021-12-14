@@ -412,11 +412,11 @@ expr_nativa:    SQRT PARA expresion PARC                { $$ = new NativaAritmet
             |   POW PARA expresion COMA expresion PARC  { $$ = new NativaAritmetica($3, 'pow', $5, @1.first_line, @1.first_column); }
             ;
 
-expresion_cad:  IDENTIFICADOR PUNTO CARACTEROFPOSITION PARA ENTERO PARC         { $$ = new NativaCadena($1, 'charposition', @1.first_line, @1.first_column, Number($5), -1) }
-            |   IDENTIFICADOR PUNTO SUBSTRING PARA ENTERO COMA ENTERO PARC      
-            |   IDENTIFICADOR PUNTO LENGTH PARA PARC                            { $$ = new NativaCadena($1, 'length', @1.first_line, @1.first_column, -1, -1) }                          
-            |   IDENTIFICADOR PUNTO TOUPPERCASE PARA PARC                       
-            |   IDENTIFICADOR PUNTO TOLOWERCASE PARA PARC                       
+expresion_cad:  IDENTIFICADOR PUNTO CARACTEROFPOSITION PARA expresion PARC         { $$ = new NativaCadena($1, 'charposition', @1.first_line, @1.first_column, $5, -1); }
+            |   IDENTIFICADOR PUNTO SUBSTRING PARA expresion COMA expresion PARC      { $$ = new NativaCadena($1, 'substring', @1.first_line, @1.first_column, $5, $7); }
+            |   IDENTIFICADOR PUNTO LENGTH PARA PARC                            { $$ = new NativaCadena($1, 'length', @1.first_line, @1.first_column, -1, -1); }                          
+            |   IDENTIFICADOR PUNTO TOUPPERCASE PARA PARC                       { $$ = new NativaCadena($1, 'touppercase', @1.first_line, @1.first_column, -1, -1); }                          
+            |   IDENTIFICADOR PUNTO TOLOWERCASE PARA PARC                       { $$ = new NativaCadena($1, 'tolowercase', @1.first_line, @1.first_column, -1, -1); }                          
             ;
 
 expresion_cast: tipo PUNTO PARSE PARA expresion PARC                            {  }
