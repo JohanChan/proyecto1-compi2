@@ -152,6 +152,7 @@ caracter (\'({escape2}|{acepta2})\')
     const { Aritmetica } = require('../Expresiones/Aritmetica');
     const { NativaAritmetica } = require('../Expresiones/NativaAritmetica');
     const { NativaCadena } = require('../Expresiones/NativaCadena');
+    const { NativaCasteo } = require('../Expresiones/NativaCasteo');
     const { Tipo } = require('../TablaSimbolos/Tipo');
     const { Cadena } = require('../Expresiones/Cadena');
     const { AST } = require('../AST/AST');
@@ -419,11 +420,11 @@ expresion_cad:  IDENTIFICADOR PUNTO CARACTEROFPOSITION PARA expresion PARC      
             |   IDENTIFICADOR PUNTO TOLOWERCASE PARA PARC                       { $$ = new NativaCadena($1, 'tolowercase', @1.first_line, @1.first_column, -1, -1); }                          
             ;
 
-expresion_cast: tipo PUNTO PARSE PARA expresion PARC                            {  }
-            |   TOINT PARA expresion PARC                                       {  }
-            |   TODOUBLE PARA expresion PARC                                    {  }
+expresion_cast: tipo PUNTO PARSE PARA expresion PARC                            { $$ = new NativaCasteo($5, 'parse', @1.first_line, @1.first_column, $1); }
+            |   TOINT PARA expresion PARC                                       { $$ = new NativaCasteo($3, 'toint', @1.first_line, @1.first_column, null); }
+            |   TODOUBLE PARA expresion PARC                                    { $$ = new NativaCasteo($3, 'todouble', @1.first_line, @1.first_column, null); }
             |   TYPEOF PARA expresion PARC                                      {  }
-            |   STRING_CAST PARA expresion PARC                                 {  }
+            |   STRING_CAST PARA expresion PARC                                 { $$ = new NativaCasteo($3, 'tostring', @1.first_line, @1.first_column, null); }
             ;
 
 
