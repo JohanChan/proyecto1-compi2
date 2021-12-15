@@ -58,7 +58,7 @@
                 <div class="tab-pane fade active show mt-3" id="cons1">
                     <div class="form-floating">
                         <form action="">
-                            <textarea class="box message form-control" id="code" name="code"></textarea>
+                            <textarea class="box message form-control" id="code" name="code" rows="15"></textarea>
                             <!--script>
                                 var editar = CodeMirror.fromTextArea(document.getElementById('code'), {
                                     line: "integer",
@@ -79,7 +79,10 @@
 
                 <div class="tab-pane fade mt-3" id="cons2">
                     <div class="form-floating">
-                        <textarea class="box message" id="consola" name="consola"></textarea>
+                        <form action="">
+                            <textarea class="box message form-control" id="consola" name="consola" rows="15"></textarea>
+                        </form>
+
                         <!-- <script>
                             var editar = CodeMirror.fromTextArea(document.getElementById('consola'), {
                                 line: "integer",
