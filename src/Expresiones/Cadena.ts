@@ -35,15 +35,22 @@ export class Cadena extends Operacion implements Expresion {
 
         switch (this.operador) {
             case Operador.CONCATENACION:
-                if (typeof valorIzq === 'string') {
-                    if (typeof valorDer === 'string') {
-                        return valorIzq + valorDer;
+                /*if (typeof valorIzq === 'string') {
+                    if (valorIzq.length === 1) {
+                        console.log('No se puede :c');
                     } else {
-                        console.log('Error semantico: se esperaba valor tipo string');
+                        if (typeof valorDer === 'string') {
+                            if (valorDer.length === 1) {
+                                console.log('No se puede :c');
+                            }*/
+                            return valorIzq + valorDer;
+                        /*} else {
+                            console.log('Error semantico: se esperaba valor tipo string');
+                        }
                     }
                 } else {
                     console.log('Error semantico: se esperaba valor tipo string');
-                }
+                }*/
                 break;
             case Operador.REPETICION:
                 if (typeof valorIzq === 'string') {

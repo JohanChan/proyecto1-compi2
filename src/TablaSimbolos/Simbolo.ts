@@ -9,13 +9,16 @@ export class Simbolo {
     public valor: any;
     public tipo: Tipo;
     public simbolo: number;
+    public parametros: Array<Simbolo>;
+    public meotodo: boolean;
 
-
-    constructor(simbolo: number, tipo:Tipo, id:string, valor:any){
+    constructor(simbolo: number, tipo:Tipo, id:string, valor:any, parametros?, metodo? ){
         this.simbolo = simbolo;
         this.indentificador = id;
         this.tipo = tipo;
         this.valor = valor;
+        this.parametros = parametros;
+        this.meotodo = metodo;
     }
     
     getValorImplicito(controlador: Controlador, tabla: TablaSimbolos) {

@@ -10,7 +10,7 @@ export class Controlador {
     }
 
     public concatenar(txt: string) {
-        this.consola += txt + '\n';
+        this.consola += txt;
     }
 
     getValor(simbolo: Simbolo): string {

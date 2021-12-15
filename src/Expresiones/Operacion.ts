@@ -85,6 +85,7 @@ export class Operacion implements Expresion{
             case 'legth': return Operador.LENGTH; break;
             case 'uppercase': return Operador.UPPERCASE; break;
             case 'lowercase': return Operador.LOWERCASE; break;
+            case 'unario': return Operador.UNARIO; break;
         }
     }
     getTipo(controlador: Controlador, tabla:TablaSimbolos): tipo {

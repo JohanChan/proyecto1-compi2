@@ -10,7 +10,7 @@ export class TablaSimbolos{
     }
 
     agregar(identificador: string, simbolo: Simbolo){
-        this.tabla.set(identificador.toLowerCase(),simbolo);
+        this.tabla.set(identificador,simbolo);
     }
 
     existe(identificador: string):boolean{

@@ -26,40 +26,48 @@ export class For implements Instruccion {
         this.columna = columna;
     }
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
+        console.log('Wenas');
+        console.log(this.declaracion);
+        console.log('Asignacion perro ',this.asignacion);
         if (this.declaracion != null) {
             let tablaLocal = new TablaSimbolos(tabla);
             let tip = this.declaracion.type.type;
             if (tip === tipo.INT) {
                 this.declaracion.ejecutar(controlador, tablaLocal);
                 while (this.condicion.getValorImplicito(controlador, tablaLocal)) {
+                    let tLocal = new TablaSimbolos(tablaLocal);
                     for (let i of this.listadoInstrucciones) {
-                        let retorno = i.ejecutar(controlador, tablaLocal);
+                        let retorno = i.ejecutar(controlador, tLocal);
                         if (i instanceof Detener || retorno instanceof Detener) {
                             return retorno;
                         }
                         if (i instanceof Continuar || retorno instanceof Continuar) {
-                            this.actualizar.ejecutar(controlador, tablaLocal);
+                            this.actualizar.ejecutar(controlador, tLocal);
                         }
                     }
                     this.actualizar.ejecutar(controlador, tablaLocal);
                 }
-            } else if (this.asignacion != null) {
-                let tablaLocal = new TablaSimbolos(tabla);
-                if (tabla.getSimbolo(this.asignacion.id).tipo.type === tipo.INT) {
-                    this.asignacion.ejecutar(controlador, tablaLocal);
-                    while (this.condicion.getValorImplicito(controlador, tabla)) {
-                        for (let i of this.listadoInstrucciones) {
-                            let retorno = i.ejecutar(controlador, tablaLocal);
-                            if (i instanceof Detener || retorno instanceof Detener) {
-                                return retorno;
-                            }
-                            if (i instanceof Continuar || retorno instanceof Continuar) {
-                                console.log('Vamoa continuar');
-                                this.actualizar.ejecutar(controlador, tablaLocal);
-                            }
+            }  
+        }else if (this.asignacion != null) {
+            console.log("Hola bb");
+            let tablaLocal = new TablaSimbolos(tabla);
+            if (tabla.getSimbolo(this.asignacion.id).tipo.type === tipo.INT) {
+                this.asignacion.ejecutar(controlador, tablaLocal);
+                
+                while (this.condicion.getValorImplicito(controlador, tabla)) {
+                    
+                    let tLocal = new TablaSimbolos(tablaLocal);
+                    for (let i of this.listadoInstrucciones) {
+                        let retorno = i.ejecutar(controlador, tLocal);
+                        if (i instanceof Detener || retorno instanceof Detener) {
+                            return retorno;
                         }
-                        this.actualizar.ejecutar(controlador, tablaLocal);
+                        if (i instanceof Continuar || retorno instanceof Continuar) {
+                            
+                            this.actualizar.ejecutar(controlador, tLocal);
+                        }
                     }
+                    this.actualizar.ejecutar(controlador, tablaLocal);
                 }
             }
         }

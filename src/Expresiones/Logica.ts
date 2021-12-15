@@ -4,7 +4,7 @@ import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
 import { Operacion, Operador } from "./Operacion";
 
-export class Logical extends Operacion implements Expresion{
+export class Logica extends Operacion implements Expresion{
 
     constructor(expIzq, operador ,expDer,linea, columna, esUnario){
         super(expIzq,operador,expDer,linea,columna,esUnario);

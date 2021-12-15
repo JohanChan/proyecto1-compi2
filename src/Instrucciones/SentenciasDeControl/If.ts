@@ -25,7 +25,6 @@ export class If implements Instruccion{
     }
     
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
-        console.log("Esta ejecutando el if");
         let tablaLocal = new TablaSimbolos(tabla);
         
         let valor = this.condicion.getValorImplicito(controlador,tabla);

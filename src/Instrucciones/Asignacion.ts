@@ -23,6 +23,7 @@ export class Asignacion implements Instruccion{
     
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
         if(tabla.existe(this.id)){
+            console.log('Que uvas');
             let aux = this.valor.getValorImplicito(controlador,tabla);
             let tip = this.valor.getTipo(controlador,tabla);
             let auxTipo = tabla.getSimbolo(this.id).tipo; 
@@ -37,7 +38,7 @@ export class Asignacion implements Instruccion{
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos){
-
+        throw new Error("Method not implemented.");
     }
 
     recorrer(): Nodo {

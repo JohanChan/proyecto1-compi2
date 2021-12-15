@@ -11,11 +11,12 @@ export class Print implements Instruccion{
     linea: number;
     columna: number;
     public expresion:Expresion;
-
-    constructor(exp:Expresion, linea:number, columna:number){
+    public salto: boolean;
+    constructor(exp:Expresion, linea:number, columna:number, salto){
         this.expresion = exp;
         this.linea = linea;
         this.columna = columna;
+        this.salto = salto;
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
@@ -25,7 +26,12 @@ export class Print implements Instruccion{
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
         const valor = this.expresion.getValorImplicito(controlador, tabla);
         if(valor!==null){
-            console.log('>',valor);
+            if(this.salto === true){
+                controlador.concatenar(valor+"\n");
+            }else{
+                controlador.concatenar(valor);
+            }
+
         }else{
             console.log('>> Error, no se pueden imprimir valores nulos');
         }

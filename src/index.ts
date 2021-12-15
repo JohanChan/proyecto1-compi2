@@ -12,6 +12,8 @@ compileBtn?.addEventListener('click', () => {
     let controlador = new Controlador();
     let tabla = new TablaSimbolos(null);
     ast.ejecutar(controlador,tabla);
+    let consola = controlador.consola;
+    (<HTMLInputElement>document.getElementById('consola')).value = consola;
     //console.log(ast);
   } catch(e) {
     console.log("Error al analizar ",e);

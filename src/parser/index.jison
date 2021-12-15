@@ -42,12 +42,12 @@ caracter (\'({escape2}|{acepta2})\')
 "."                  { console.log("Reconocio : "+ yytext); return 'PUNTO'}
 ","                  { console.log("Reconocio : "+ yytext); return 'COMA'}
 "=="                 { console.log("Reconocio : "+ yytext); return 'IGUALIGUAL'}
-"="                  { console.log("Reconocio : "+ yytext); return 'IGUAL'}
 "!="                 { console.log("Reconocio : "+ yytext); return 'DIFERENCIA'}
 ">="                 { console.log("Reconocio : "+ yytext); return 'MAYORIGUAL'}
 "<="                 { console.log("Reconocio : "+ yytext); return 'MENORIGUAL'}
 "<"                  { console.log("Reconocio : "+ yytext); return 'MENORQ'}
 ">"                  { console.log("Reconocio : "+ yytext); return 'MAYORQ'}
+"="                  { console.log("Reconocio : "+ yytext); return 'IGUAL'}
 "||"                 { console.log("Reconocio : "+ yytext); return 'OR'}
 "!"                  { console.log("Reconocio : "+ yytext); return 'NOT'}
 ":"                  { console.log("Reconocio : "+ yytext); return 'DOSP'}
@@ -79,6 +79,7 @@ caracter (\'({escape2}|{acepta2})\')
 "for"               { console.log("Reconocio : "+ yytext); return 'FOR'}
 "in"                { console.log("Reconocio : "+ yytext); return 'IN'}
 "void"              { console.log("Reconocio : "+ yytext); return 'VOID'}
+"main"              { console.log("Reconocio : "+ yytext); return 'MAIN' }
 
 "parse"             { console.log("Reconocio : "+ yytext); return 'PARSE'}
 "toInt"             { console.log("Reconocio : "+ yytext); return 'TOINT'}
@@ -167,10 +168,14 @@ caracter (\'({escape2}|{acepta2})\')
     const { If } = require('../Instrucciones/SentenciasDeControl/If');
     const { Detener } = require('../Instrucciones/SentenciaTransferencia/Detener');
     const { Continuar } = require('../Instrucciones/SentenciaTransferencia/Continuar');
-    const { Retornar } = require('../Instrucciones/SentenciaTransferencia/Retornar');
+    const { Retonar } = require('../Instrucciones/SentenciaTransferencia/Retornar');
     const { Caso } = require('../Instrucciones/SentenciasDeControl/Case');
     const { Switch } = require('../Instrucciones/SentenciasDeControl/Switch');
     const { Ternario } = require('../Expresiones/Ternario');
+
+    const { Llamada } = require('../Instrucciones/FuncionesMetodos/Llamada');
+    const { Main } = require('../Instrucciones/FuncionesMetodos/Main');
+    const { Metodo } = require('../Instrucciones/FuncionesMetodos/Metodo');
 %}
 
 /* Precedencia de operadores */
@@ -207,8 +212,8 @@ instruccion:    declaracion PYC         { $$ = $1; }
             |   actualizar PYC          { $$ = $1; }
             |   BREAK PYC               { $$ = new Detener(); }
             |   CONTINUE PYC            { $$ = new Continuar(); }
-            |   RETURN PYC              { $$ = new Retornar(null); }
-            |   RETURN expresion PYC    { $$ = new Retornar($2); }
+            |   RETURN PYC              { $$ = new Retonar(null); }
+            |   RETURN expresion PYC    { $$ = new Retonar($2); }
             |   funcion_instr           { $$ = $1; }
             |   llamada_instr PYC       { $$ = $1; }
             |   return_instr PYC        { $$ = $1; }
@@ -280,8 +285,8 @@ tipo:           INT         { $$ = new Tipo('INT'); console.log('Se reconocio ri
 asignacion:     IDENTIFICADOR IGUAL expresion   { $$ = new Asignacion($1, $3, @1.first_line, @1.first_column); }
             ;
 
-imprimir:       PRINT PARA expresion PARC       { console.log('print'); $$ = new Print($3, @1.first_line, @1.last_column);}
-            |   PRINTLN PARA expresion PARC     { console.log('print'); $$ = new Print($3, @1.first_line, @1.last_column);}
+imprimir:       PRINT PARA expresion PARC       { $$ = new Print($3, @1.first_line, @1.last_column, false);}
+            |   PRINTLN PARA expresion PARC     { $$ = new Print($3, @1.first_line, @1.last_column, true);}
             ;
 
 if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC                                  { $$ = new If($3, $6, [], @1.first_line, @1.last_column); }
@@ -322,23 +327,24 @@ actualizar:     IDENTIFICADOR INCRE     { $$ = new Asignacion($1, new Aritmetica
             ;
 
 /* DECLARACION DE UNA FUNCION */
-funcion_instr:  VOID IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC
-            |   VOID IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC
-            |   tipo IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC
-            |   tipo IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC
+funcion_instr:  VOID MAIN PARA PARC LLAVEA instrucciones LLAVEC                        { $$ = new Main(3, new Tipo('VOID'), 'main', true, $6, @1.first_line, @1.first_column); }
+            |   VOID IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC    { $$ = new Metodo(3, new Tipo('VOID'), $2, $4, true, $7, @1.first_line, @1.first_column); }
+            |   VOID IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC               { $$ = new Metodo(3, new Tipo('VOID'), $2, [], true, $6, @1.first_line, @1.first_column); } 
+            |   tipo IDENTIFICADOR PARA parametros PARC LLAVEA instrucciones LLAVEC    { $$ = new Metodo(3, $1, $2, $4,true, $6, @1.first_line, @1.first_column); }
+            |   tipo IDENTIFICADOR PARA PARC LLAVEA instrucciones LLAVEC               { $$ = new Metodo(3, $1, $2, [],true, $6, @1.first_line, @1.first_column); }
             ; 
 
-parametros:     parametros COMA tipo IDENTIFICADOR
-            |   tipo IDENTIFICADOR
+parametros:     parametros COMA tipo IDENTIFICADOR      { $$ = $1; $$.push(new Simbolo(6, $3,$4,null)); }
+            |   tipo IDENTIFICADOR                      { $$ = new Array(); $$.push(new Simbolo(6, $1, $2, null)); }
             ;
 
 /* LLAMADA A UNA FUNCION */
-llamada_instr:  IDENTIFICADOR PARA parametros_llamada PARC
-            |   IDENTIFICADOR PARA PARC
+llamada_instr:  IDENTIFICADOR PARA parametros_llamada PARC  { $$ = new Llamada($1, $3, @1.first_line, @1.first_column); }
+            |   IDENTIFICADOR PARA PARC                     { $$ = new Llamada($1, [], @1.first_line, @1.first_column); }
             ;
 
-parametros_llamada: parametros_llamada COMA expresion
-            |   expresion
+parametros_llamada: parametros_llamada COMA expresion       { $$ = $1; $$.push($3); }
+            |   expresion                                   { $$ = new Array(); $$.push($1); }
             ;
 
 /* DECLARACION DE ARREGLOS */
@@ -362,7 +368,7 @@ pop_instr:      IDENTIFICADOR PUNTO POP PARA PARC
 
 
 /* EXPRESIONES */
-expresion:      MENOS expresion %prec UNARIO
+expresion:      MENOS expresion %prec UNARIO    { $$ = new Aritmetica($2, 'unario', null, @1.first_line, @1.last_column, true); }
             |   expresion_log           { $$ = $1; }
             |   expresion_rel           { $$ = $1; }
             |   expresion_arit          { $$ = $1; }
@@ -374,22 +380,23 @@ expresion:      MENOS expresion %prec UNARIO
             |   expresion INTERRC expresion DOSP expresion  { $$ = new Ternario($1,$3,$5,@1.first_line,@1.last_column); }
             |   DECIMAL                 { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
             |   ENTERO                  { $$ = new Primitivo(Number($1), @1.first_line, @1.first_column); }
-            |   CADENA                  { $$ = new Primitivo($1, @1.first_line, @1.first_column); }
-            |   CARACTER                { $$ = new Primitivo($1, @1.first_line, @1.first_column); }
+            |   CADENA                  { $1 = $1.slice(1, $1.length-1); $$ = new Primitivo($1, @1.first_line, @1.first_column); }
+            |   CARACTER                { $1 = $1.slice(1, $1.length-1); $$ = new Primitivo($1, @1.first_line, @1.first_column); }
             |   TRUE                    { $$ = new Primitivo(true, @1.first_line, @1.first_column); }
             |   FALSE                   { $$ = new Primitivo(false, @1.first_line, @1.first_column); }
             |   NULL                    { $$ = new Primitivo(null, @1.first_line, @1.first_column); }
             |   IDENTIFICADOR           { $$ = new Identificador($1, @1.first_line, @1.first_column); }
+            |   llamada_instr           { console.log('Llamada como expresón '); $$ = $1; }
             |   acceso_arr
-            |   llamada_instr /*ASIGNAR A UNA VARIABLE EL VALOR DE UNA FUNCION CON RETORNO*/
             ;
 
-expresion_arit: expresion MAS expresion         { $$ = new Aritmetica($1, '+', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MENOS expresion       { $$ = new Aritmetica($1, '-', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MULTI expresion       { $$ = new Aritmetica($1, '*', $3, @1.first_line, @1.first_column, false); }
-            |   expresion DIV expresion         { $$ = new Aritmetica($1, '/', $3, @1.first_line, @1.first_column, false); }
-            |   expresion MOD expresion         { $$ = new Aritmetica($1, '%', $3, @1.first_line, @1.first_column, false); }
-            |   expresion CONCATENACION expresion
+expresion_arit: expresion MAS expresion             { $$ = new Aritmetica($1, '+', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MENOS expresion           { $$ = new Aritmetica($1, '-', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MULTI expresion           { $$ = new Aritmetica($1, '*', $3, @1.first_line, @1.first_column, false); }
+            |   expresion DIV expresion             { $$ = new Aritmetica($1, '/', $3, @1.first_line, @1.first_column, false); }
+            |   expresion MOD expresion             { $$ = new Aritmetica($1, '%', $3, @1.first_line, @1.first_column, false); }
+            |   expresion CONCATENACION expresion   { $$ = new Cadena($1, '&', $3, @1.first_line, @1.first_column, false); }
+            |   expresion REPETICION expresion      { $$ = new Cadena($1, '^', $3, @1.first_line, @1.first_column, false); }
             ;
 
 expresion_rel:  expresion MENORQ expresion      { $$ = new Relacional($1, '<',  $3, @1.first_line, @1.first_column, false); }
@@ -400,9 +407,9 @@ expresion_rel:  expresion MENORQ expresion      { $$ = new Relacional($1, '<',  
             |   expresion DIFERENCIA expresion  { $$ = new Relacional($1, '!=', $3, @1.first_line, @1.first_column, false); }
             ;
 
-expresion_log:  expresion AND expresion         { $$ = Logica($1, '&&', $3,  @1.first_line, @1.first_column, false); }
-            |   expresion OR expresion          { $$ = Logica($1, '||', $3,  @1.first_line, @1.first_column, false); }
-            |   NOT expresion                   { $$ = Logica($1, '!', null, @1.first_line, @1.first_column, false); }
+expresion_log:  expresion AND expresion         { $$ = new Logica($1, '&&', $3,  @1.first_line, @1.first_column, false); }
+            |   expresion OR expresion          { $$ = new Logica($1, '||', $3,  @1.first_line, @1.first_column, false); }
+            |   NOT expresion                   { $$ = new Logica($2, '!', null, @1.first_line, @1.first_column, true); }
             ;
 
 expr_nativa:    SQRT PARA expresion PARC                { $$ = new NativaAritmetica($3, 'sqrt', null, @1.first_line, @1.first_column); }

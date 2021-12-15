@@ -7,7 +7,8 @@ export enum tipo {
     VOID,
     STRUCT,
     ATRIBUTO,
-    ARRAY
+    ARRAY,
+    MAIN
 }
 
 export class Tipo{
@@ -36,6 +37,8 @@ export class Tipo{
             return tipo.STRUCT;
         }else if(stype == 'CHAR'){
             return tipo.CARACTER;
+        }else if(stype == 'MAIN'){
+            return tipo.MAIN;
         }
     }
     getsType():string{
