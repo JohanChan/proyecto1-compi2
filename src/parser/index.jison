@@ -176,6 +176,12 @@ caracter (\'({escape2}|{acepta2})\')
     const { Llamada } = require('../Instrucciones/FuncionesMetodos/Llamada');
     const { Main } = require('../Instrucciones/FuncionesMetodos/Main');
     const { Metodo } = require('../Instrucciones/FuncionesMetodos/Metodo');
+
+    const { Arreglo } = require('../Instrucciones/Arreglo');
+    const { ModArreglo } = require('../Instrucciones/ModArreglo');
+    const { AccesoArreglo } = require('../Expresiones/AccesoArreglo');
+    const { Push } = require('../Instrucciones/Push');
+    const { Pop } = require('../Instrucciones/Pop');
 %}
 
 /* Precedencia de operadores */
@@ -348,23 +354,27 @@ parametros_llamada: parametros_llamada COMA expresion       { $$ = $1; $$.push($
             ;
 
 /* DECLARACION DE ARREGLOS */
-arreglos_instr: tipo CORA CORC IDENTIFICADOR IGUAL CORA lista_expr CORC
-            |   tipo CORA CORC IDENTIFICADOR IGUAL CORA CORC
+arreglos_instr: tipo CORA CORC IDENTIFICADOR IGUAL CORA lista_expr CORC     { 
+                                                                             let lis = new Simbolo(2,null,$4,null,$7);
+                                                                             $$ = new Arreglo(lis, $1, $7, @1.first_line, @1.first_column); 
+                                                                            }
+            /*|   tipo CORA CORC IDENTIFICADOR IGUAL CORA CORC                { $$ = new Arreglo($1, @1.first_line, @1.first_column); }*/
             ;
 
-lista_expr:     lista_expr COMA expresion
-            |   expresion
+lista_expr:     lista_expr COMA expresion   { $1.push($3); $$ = $1; }
+            |   expresion                   { $$ = [$1]; } /*{ $$ = new Array(); $$.push($1); }*/
             ;
             
 /* MODIFICACION DE UN ARREGLO */
-modArreglos_instr:  IDENTIFICADOR CORA expresion CORC IGUAL expresion
+modArreglos_instr:  IDENTIFICADOR CORA expresion CORC IGUAL expresion   { $$ = new ModArreglo($1, $3, $6, @1.first_line, @1.first_column); }
             ;
 
-push_instr:     IDENTIFICADOR PUNTO PUSH PARA PARC
+push_instr:     IDENTIFICADOR PUNTO PUSH PARA expresion PARC    { $$ = new Push($1, $5, @1.first_line, @1.first_column); }
             ;
 
-pop_instr:      IDENTIFICADOR PUNTO POP PARA PARC
+pop_instr:      IDENTIFICADOR PUNTO POP PARA PARC               { $$ = new Pop($1, @1.first_line, @1.first_column); }
             ;
+
 
 
 /* EXPRESIONES */
@@ -387,7 +397,7 @@ expresion:      MENOS expresion %prec UNARIO    { $$ = new Aritmetica($2, 'unari
             |   NULL                    { $$ = new Primitivo(null, @1.first_line, @1.first_column); }
             |   IDENTIFICADOR           { $$ = new Identificador($1, @1.first_line, @1.first_column); }
             |   llamada_instr           { console.log('Llamada como expresón '); $$ = $1; }
-            |   acceso_arr
+            |   acceso_arr              { $$ = $1; }
             ;
 
 expresion_arit: expresion MAS expresion             { $$ = new Aritmetica($1, '+', $3, @1.first_line, @1.first_column, false); }
@@ -435,7 +445,7 @@ expresion_cast: tipo PUNTO PARSE PARA expresion PARC                            
             ;
 
 
-acceso_arr:     IDENTIFICADOR CORA expresion CORC /*OBTENER VALOR EN POSICION DE ARREGLO*/
+acceso_arr:     IDENTIFICADOR CORA expresion CORC                           { $$ = new AccesoArreglo($1, $3, @1.first_line, @1.first_column); }
             |   IDENTIFICADOR CORA expresion DOSP expresion CORC
             |   IDENTIFICADOR CORA BEGIN DOSP expresion CORC
             |   IDENTIFICADOR CORA expresion DOSP END CORC
