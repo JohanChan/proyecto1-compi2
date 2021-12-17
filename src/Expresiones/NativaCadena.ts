@@ -54,10 +54,19 @@ export class NativaCadena implements Expresion {
                     }
                 break;
                 case "length": 
-                    if(typeof aux.valor === 'string'){
-                        let temp = aux.valor.replace(/(\")/gm,"");
-                        return temp.length;
+                    let tipoSimbolo = tabla.getSimbolo(this.identificador).simbolo;
+                    if (tipoSimbolo == 2) { 
+                        let tamArr = tabla.getSimbolo(this.identificador).getTamArr();
+                        console.log("Se quiere obtener el tam de un arreglo " + tamArr);
+                        return tamArr;
+                    }else{
+                        console.log("Se quiere obtener el tam de una cadena")
+                        if(typeof aux.valor === 'string'){
+                            let temp = aux.valor.replace(/(\")/gm,"");
+                            return temp.length;
+                        }
                     }
+                    
                 break;
                 case "substring": 
                     if(typeof aux.valor === 'string'){

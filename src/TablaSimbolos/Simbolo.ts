@@ -13,12 +13,12 @@ export class Simbolo {
     public parametros: Array<Simbolo>;
     public meotodo: boolean;
 
-    constructor(simbolo: number, tipo:Tipo, id:string, valor:any, valores?:Array<any>, parametros?, metodo? ){
+    constructor(simbolo: number, tipo:Tipo, id:string, valor:any, parametros?, metodo?,  valores?:Array<any> ){
         this.simbolo = simbolo; //1=variable;2=arreglo
         this.indentificador = id;
         this.tipo = tipo;
         this.valor = valor;
-	this.valores = valores; //VALORES POR SI ES ARREGLO
+	    this.valores = valores; //VALORES POR SI ES ARREGLO
         this.parametros = parametros;
         this.meotodo = metodo;
     }
@@ -41,5 +41,14 @@ export class Simbolo {
     }
     getTamArr(){
         return this.valores.length;
+    }
+
+    getArregloRang(inicio:any, fin:any ){
+        let valoresTemp: Array<any>;
+        valoresTemp = new Array();
+        for (let index = inicio; index <= fin; index++) {
+            valoresTemp.push(this.valores[index]);
+        }
+        return valoresTemp;
     }
 }

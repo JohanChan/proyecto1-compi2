@@ -182,6 +182,7 @@ caracter (\'({escape2}|{acepta2})\')
     const { AccesoArreglo } = require('../Expresiones/AccesoArreglo');
     const { Push } = require('../Instrucciones/Push');
     const { Pop } = require('../Instrucciones/Pop');
+    const { ObtenerArreglo } = require('../Expresiones/ObtenerArreglo');
 %}
 
 /* Precedencia de operadores */
@@ -291,8 +292,14 @@ tipo:           INT         { $$ = new Tipo('INT'); console.log('Se reconocio ri
 asignacion:     IDENTIFICADOR IGUAL expresion   { $$ = new Asignacion($1, $3, @1.first_line, @1.first_column); }
             ;
 
-imprimir:       PRINT PARA expresion PARC       { $$ = new Print($3, @1.first_line, @1.last_column, false);}
-            |   PRINTLN PARA expresion PARC     { $$ = new Print($3, @1.first_line, @1.last_column, true);}
+imprimir:       PRINT PARA lista_print PARC       { $$ = new Print( $3, @1.first_line, @1.last_column, false);}
+            |   PRINTLN PARA lista_print PARC     { $$ = new Print( $3, @1.first_line, @1.last_column, true);}
+            /*|   PRINTLN PARA expresion PARC     { $$ = new Print($3, @1.first_line, @1.last_column, true);}
+            |   PRINTLN PARA lista_print PARC   { $$ = new Print(null, $3, @1.first_line, @1.last_column, true);}*/
+            ;
+
+lista_print:    lista_print COMA expresion      { $1.push($3); $$ = $1; }
+            |   expresion                       { $$ = [$1]; }
             ;
 
 if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC                                  { $$ = new If($3, $6, [], @1.first_line, @1.last_column); }
@@ -446,9 +453,10 @@ expresion_cast: tipo PUNTO PARSE PARA expresion PARC                            
 
 
 acceso_arr:     IDENTIFICADOR CORA expresion CORC                           { $$ = new AccesoArreglo($1, $3, @1.first_line, @1.first_column); }
-            |   IDENTIFICADOR CORA expresion DOSP expresion CORC
-            |   IDENTIFICADOR CORA BEGIN DOSP expresion CORC
-            |   IDENTIFICADOR CORA expresion DOSP END CORC
+            |   IDENTIFICADOR CORA expresion DOSP expresion CORC            { $$ = new ObtenerArreglo($1, $3, $5, null, null, @1.first_line, @1.first_column); }
+            |   IDENTIFICADOR CORA BEGIN DOSP expresion CORC                { $$ = new ObtenerArreglo($1, null, $5, 0, null, @1.first_line, @1.first_column); }
+            |   IDENTIFICADOR CORA expresion DOSP END CORC                  { $$ = new ObtenerArreglo($1, $3, null, null, -1, @1.first_line, @1.first_column); }
+            |   IDENTIFICADOR CORA BEGIN DOSP END CORC                      { $$ = new ObtenerArreglo($1, null, null, 0, -1, @1.first_line, @1.first_column); }
             |   NUMERAL IDENTIFICADOR /*COPIAR ARREGLO*/
             ;
             

@@ -60,7 +60,7 @@ export class Arreglo implements Expresion{
                     return;
                 }
             }
-            let nuevoArr = new Simbolo(this.id.simbolo, this.type, this.id.indentificador, null, this.valores);
+            let nuevoArr = new Simbolo(this.id.simbolo, this.type, this.id.indentificador, null, null, null, this.valores);
             tabla.agregar(this.id.indentificador, nuevoArr);
             console.log("Se guardo el arreglo :) ", this.valores);
         }
