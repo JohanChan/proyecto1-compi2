@@ -9,6 +9,6 @@ export interface Expresion{
     
      getTipo(contolador:Controlador, tabla:TablaSimbolos):tipo ;
      getValorImplicito(controlador:Controlador, tabla:TablaSimbolos):any;
-     traducir(controlador:Controlador, tabla:TablaSimbolos):any ;
+     traducir(controlador:Controlador, tabla:TablaSimbolos, recursivo?:any):any ;
      
 }

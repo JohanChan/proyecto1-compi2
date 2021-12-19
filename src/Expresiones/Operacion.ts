@@ -95,7 +95,9 @@ export class Operacion implements Expresion{
         throw new Error("Method not implemented.");
     }
     traducir(controlador: Controlador, tabla:TablaSimbolos) {
-        throw new Error("Method not implemented.");
+        //throw new Error("Method not implemented.");
+
+            
     }
     
 }

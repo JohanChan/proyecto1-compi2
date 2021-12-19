@@ -6,7 +6,7 @@ import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
 
-export class Push implements Instruccion{
+export class Pop implements Instruccion{
 
     public id: string;
     public linea: number;

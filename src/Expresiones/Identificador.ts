@@ -2,6 +2,7 @@ import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
+import {Temporal, Resultado3D} from "../TablaSimbolos/Temporales";
 
 export class Identificador implements Expresion{
     linea: number;
@@ -26,8 +27,13 @@ export class Identificador implements Expresion{
             console.log('Error semantico: no existe la variables ',idExiste);
         }
     }
+    
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
-        throw new Error("Method not implemented.");
+        let resultado3D = new Resultado3D();
+        resultado3D.codigo3D = "";
+        resultado3D.tipo = tabla.getSimbolo(this.identificador).tipo.type;
+        resultado3D.temporal = "";
+        return Resultado3D;
     }
     
 }

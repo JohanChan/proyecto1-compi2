@@ -3,6 +3,7 @@ import { Entorno } from "../AST/Entorno";
 import { tipo, Tipo } from "./Tipo";
 import { Controlador } from "Controlador";
 import { TablaSimbolos } from "./TablaSimbolos";
+import { Resultado3D,Temporal } from "./Temporales";
 
 export class Simbolo {
     public indentificador: string;
@@ -12,6 +13,7 @@ export class Simbolo {
     public valores: Array<any>;
     public parametros: Array<Simbolo>;
     public meotodo: boolean;
+    public posicionStakc: number; //POSICION EN LA MEMORIA STACK
 
     constructor(simbolo: number, tipo:Tipo, id:string, valor:any, parametros?, metodo?,  valores?:Array<any> ){
         this.simbolo = simbolo; //1=variable;2=arreglo
@@ -33,6 +35,10 @@ export class Simbolo {
     setValorArr(valor:any, pos:any){
         this.valores[pos] = valor;
     }
+
+    setValores(valores:Array<any>){
+        this.valores = valores;
+    }
     pushArr(valor:any){
         this.valores.push(valor);
     }
@@ -51,4 +57,6 @@ export class Simbolo {
         }
         return valoresTemp;
     }
+
+   
 }

@@ -5,6 +5,7 @@ import { TablaSimbolos } from '../TablaSimbolos/TablaSimbolos'
 import { AST } from '../AST/AST';
 import { Entorno } from '../AST/Entorno';
 import { Controlador } from '../Controlador';
+import { Resultado3D, Temporal } from '../TablaSimbolos/Temporales';
 
 export class Aritmetica extends Operacion implements Expresion {
     public constructor(expIzq, operador, exprDer, linea, columna, esUnario) {
@@ -99,8 +100,52 @@ export class Aritmetica extends Operacion implements Expresion {
         }
     }
 
-    traducir(controlador: Controlador, tabla: TablaSimbolos): void {
-        throw 'Sin data';
+
+    traducir(controlador: Controlador, tabla: TablaSimbolos) {
+        console.log("Traduciendo aritmetica");
+        let valorNodoIzq;
+        let valorNodoDer;
+
+        let nodoIzq:Resultado3D = new Resultado3D();
+        let nodoDer:Resultado3D = new Resultado3D();
+        let resultado:Resultado3D = new Resultado3D(); //nodo
+        //console.log("Expresion Izq... ", this.expIzq);
+        nodoIzq = this.expIzq.traducir(controlador,tabla);
+        nodoDer = this.exprDer.traducir(controlador,tabla); 
+        let tipo1 = this.expIzq.getTipo(controlador,tabla);
+        let tipo2 = this.exprDer.getTipo(controlador,tabla);
+
+        //console.log("Nodo izq... ", nodoIzq);
+        //console.log("Nodo der... ", nodoDer);
+
+        valorNodoIzq = nodoIzq;
+        valorNodoDer = nodoDer;
+
+        resultado.codigo3D = resultado.codigo3D.concat(nodoIzq.codigo3D);
+        resultado.codigo3D = resultado.codigo3D.concat(nodoDer.codigo3D);
+
+        let temporal = Temporal.generarTemporal();
+        Temporal.temporales.push(temporal);
+        //console.log("Temporal... ", Temporal.temporales);
+        if (nodoIzq.temporal != "" && nodoDer.temporal != "") {
+            resultado.codigo3D += (Temporal.nuevaLinea(temporal + " = " + nodoIzq.temporal + this.operadorString + nodoDer.temporal, "" ));
+        }else if(nodoDer.temporal == "" && nodoIzq.temporal != ""){
+            resultado.codigo3D += (Temporal.nuevaLinea(temporal + " = " + nodoIzq.temporal + this.operadorString + nodoDer.valor, "" ));
+        }else if(nodoDer.temporal != "" && nodoIzq.temporal == ""){
+            resultado.codigo3D += (Temporal.nuevaLinea(temporal + " = " + nodoIzq.valor + this.operadorString + nodoDer.temporal, "" ));
+        }
+        else if(nodoDer.temporal == "" && nodoIzq.temporal == ""){
+            resultado.codigo3D += (Temporal.nuevaLinea(temporal + " = " + nodoIzq.valor + this.operadorString + nodoDer.valor, "" ));
+        }
+    
+        resultado.temporal = temporal;
+        resultado.valor = valorNodoIzq + valorNodoDer;
+        //console.log("Resultado aritmetica... ", resultado);
+        return resultado;
+
+
+
+
 
     }
 }

@@ -1,3 +1,4 @@
+
 import { Controlador } from "../../Controlador";
 import { Expresion } from "../../Interfaces/Expresion";
 import { Instruccion } from "../../Interfaces/Instruccion";
@@ -37,7 +38,12 @@ export class Llamada implements Instruccion, Expresion {
         }
     }
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
-        throw new Error("Method not implemented.");
+        /*let resultado3D = new Resultado3D();
+        resultado3D.codigo3D = "";
+        //resultado3D.tipo = this.tipo;
+        resultado3D.temporal = new Temporal(String("t1")); //(this.temporal)
+        return resultado3D;*/
+        //throw new Error("Method not implemented.");
     }
     getTipo(contolador: Controlador, tabla: TablaSimbolos): tipo {
         let tip = tabla.getSimbolo(this.identificador) as Metodo;
@@ -63,6 +69,9 @@ export class Llamada implements Instruccion, Expresion {
                 let auxiliar = this.parametros[i].getTipo(controlador, tablaLocal);
                 let auxiliar2 = simbol.parametros[i].tipo;
                 if (auxiliar === auxiliar2.type || auxiliar === tipo.DOUBLE && auxiliar2.type === tipo.INT) {
+                    /*if (simbol.parametros[i].valores != null) {
+                        simbol.parametros[i].setValores(this.parametros[i].)
+                    }*/
                     simbol.parametros[i].setValor(this.parametros[i].getValorImplicito(controlador, tablaLocal));
                     tablaLocal.agregar(simbol.parametros[i].indentificador, simbol.parametros[i]);
                     contador++;

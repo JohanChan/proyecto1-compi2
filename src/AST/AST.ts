@@ -6,6 +6,7 @@ import { TablaSimbolos } from "TablaSimbolos/TablaSimbolos";
 import { Main } from '../Instrucciones/FuncionesMetodos/Main'
 import { Metodo } from "../Instrucciones/FuncionesMetodos/Metodo";
 import { Declaracion } from '../Instrucciones/Declaracion'
+import { Temporal } from "TablaSimbolos/Temporales";
 export class AST{
     
     public instrucciones:Array<Instruccion>
@@ -38,6 +39,42 @@ export class AST{
                 instruccion.ejecutar(controlador,tabla);
             }
         }
-    }    
+    }
+    
+    traducir(controlador: Controlador, tabla: TablaSimbolos){
+        console.log("Traduciendo... ");
+        let codigo:any;
+        for(let instruccion of this.instrucciones){
+            codigo = instruccion.traducir(controlador,tabla);
+        }
+        return this.encabezado(codigo);
+    }
+    encabezado(codigo): string{
+        let encabezado:string;
+
+        encabezado += "#include <iostream>\n";
+        encabezado += "#include <math.h>\n";
+        encabezado += "double heap[30101999];\n";
+        encabezado += "double stack[30101999];\n\n";
+        encabezado += "double P;\n";
+        encabezado += "double H;\n";
+        encabezado += "double ";
+        let numeroT = codigo.temporal.split("t");
+        //console.log("numero tmeporal ",numeroT);
+        for (let i = 1; i <= numeroT[1]; i++) {
+            if(i==numeroT[1]){
+                encabezado += "t"+i+";"
+            }else{
+                encabezado += "t"+i+", "
+            }
+            
+        }
+        encabezado += "\n";
+        encabezado += "/*------MAIN------*///\n";
+        encabezado += "void main() { \n";
+        encabezado += codigo.codigo3D
+        encabezado += "return; \n }"
+        return encabezado;
+    }
 
 }

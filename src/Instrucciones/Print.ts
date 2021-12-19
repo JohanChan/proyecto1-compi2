@@ -4,6 +4,7 @@ import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
+import { Resultado3D, Temporal } from "../TablaSimbolos/Temporales";
 
 // print("hola mundo");
 
@@ -22,12 +23,6 @@ export class Print implements Instruccion{
     }
 
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
-        /*const valor = this.expresion.getValorImplicito(controlador, tabla);
-        if(this.salto === true){
-            controlador.concatenar(valor+"\n");
-        }else{
-            controlador.concatenar(valor);
-        }*/
 
         //console.log("Entro al print");
         let tamExp = this.expresiones.length;
@@ -40,35 +35,17 @@ export class Print implements Instruccion{
             if (this.salto === true) {
                 controlador.concatenar("\n");
             }
-        /*    
-        if (this.expresion != null) {
-            const valor = this.expresion.getValorImplicito(controlador, tabla);
-            if(valor!==null){
-                if(this.salto === true){
-                    controlador.concatenar(valor+"\n");
-                }else{
-                    controlador.concatenar(valor);
-                }
-
-            }else{
-                console.log('>> Error, no se pueden imprimir valores nulos');
-            }
-        }else{
-            let tamExp = this.expresiones.length;
-            for (let index = 0; index < tamExp; index++) {
-                let exp = this.expresion[index].getValorImplicito(controlador,tabla);
-                console.log(exp);
-                controlador.concatenar(exp);
-            }
-            if (this.salto === true) {
-                controlador.concatenar("\n");
-            }
-        }
-        */
+        
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
-        throw new Error("Method not implemented.");
+        //throw new Error("Method not implemented.");
+        console.log("Traduciendo Print... ", this.expresiones[0]);
+        let resultado:Resultado3D = this.expresiones[0].traducir(controlador,tabla);
+        resultado.codigo3D += Temporal.nuevaLinea(("************PRINTF***********"),"");
+        resultado.codigo3D += Temporal.nuevaLinea(("printf(\"%f\", " + resultado.temporal + ")"),"");
+        console.log("C3D Print.. ", resultado);
+        return resultado;
     }
 
 }
