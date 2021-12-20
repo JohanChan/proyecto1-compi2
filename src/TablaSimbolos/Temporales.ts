@@ -22,14 +22,14 @@ export class Temporal{
 
 export class Etiqueta{
     public static etiquetas:Array<any>;
-    public static contadorEtiq: number;
+    public static contadorEtiq: number = 1;
     public static nombre:any;
     public static utilizado:boolean;
 
     public static generarEtiqueta(): string{
         let num = Etiqueta.contadorEtiq;
         Etiqueta.contadorEtiq++;
-        return "l" + String(num);
+        return "L" + String(num);
         
     }
 }
@@ -40,12 +40,16 @@ export class Resultado3D{
     public temporal: string;
     public tipo: any;
     public valor: any;
+    public etiquetaTrue: string;
+    public etiquetaFalse: string;
 
     constructor(){
         this.codigo3D = "";
         this.temporal = "";
         this.tipo = null;
         this.valor = null;
+        this.etiquetaFalse = "";
+        this.etiquetaTrue = "";
     }
 }
 

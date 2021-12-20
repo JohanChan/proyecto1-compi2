@@ -102,21 +102,16 @@ export class Aritmetica extends Operacion implements Expresion {
 
 
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
-        console.log("Traduciendo aritmetica");
         let valorNodoIzq;
         let valorNodoDer;
 
         let nodoIzq:Resultado3D = new Resultado3D();
         let nodoDer:Resultado3D = new Resultado3D();
         let resultado:Resultado3D = new Resultado3D(); //nodo
-        //console.log("Expresion Izq... ", this.expIzq);
         nodoIzq = this.expIzq.traducir(controlador,tabla);
         nodoDer = this.exprDer.traducir(controlador,tabla); 
         let tipo1 = this.expIzq.getTipo(controlador,tabla);
         let tipo2 = this.exprDer.getTipo(controlador,tabla);
-
-        //console.log("Nodo izq... ", nodoIzq);
-        //console.log("Nodo der... ", nodoDer);
 
         valorNodoIzq = nodoIzq;
         valorNodoDer = nodoDer;
@@ -125,8 +120,8 @@ export class Aritmetica extends Operacion implements Expresion {
         resultado.codigo3D = resultado.codigo3D.concat(nodoDer.codigo3D);
 
         let temporal = Temporal.generarTemporal();
-        Temporal.temporales.push(temporal);
-        //console.log("Temporal... ", Temporal.temporales);
+        //Temporal.temporales.push(temporal);
+
         if (nodoIzq.temporal != "" && nodoDer.temporal != "") {
             resultado.codigo3D += (Temporal.nuevaLinea(temporal + " = " + nodoIzq.temporal + this.operadorString + nodoDer.temporal, "" ));
         }else if(nodoDer.temporal == "" && nodoIzq.temporal != ""){
@@ -140,12 +135,6 @@ export class Aritmetica extends Operacion implements Expresion {
     
         resultado.temporal = temporal;
         resultado.valor = valorNodoIzq + valorNodoDer;
-        //console.log("Resultado aritmetica... ", resultado);
         return resultado;
-
-
-
-
-
     }
 }

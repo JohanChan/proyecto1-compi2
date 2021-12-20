@@ -3,6 +3,7 @@ import {Controlador} from "../../Controlador";
 import { Expresion } from "../../Interfaces/Expresion";
 import { Instruccion } from "../../Interfaces/Instruccion";
 import { TablaSimbolos } from "../../TablaSimbolos/TablaSimbolos";
+import { Resultado3D } from "../../TablaSimbolos/Temporales";
 import {Tipo, tipo} from "../../TablaSimbolos/Tipo"
 import {Continuar} from "../SentenciaTransferencia/Continuar";
 import {Detener} from "../SentenciaTransferencia/Detener";
@@ -63,7 +64,27 @@ export class If implements Instruccion{
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos){
-
+        console.log("Traduciendo desde If ");
+        let condicion:Resultado3D = new Resultado3D();
+        let resultado:Resultado3D = new Resultado3D(); //nodo
+        let codigo:Resultado3D = new Resultado3D();
+        condicion = this.condicion.traducir(controlador,tabla);
+        resultado.codigo3D += condicion.codigo3D;
+        resultado.codigo3D += condicion.etiquetaTrue+":\n";
+        if(this.listadoIf != null){
+            for(let instruccion of this.listadoIf){
+                codigo = instruccion.traducir(controlador,tabla);
+                resultado.codigo3D += codigo.codigo3D;
+            }
+        }
+        if(this.listadoElse != null){
+            resultado.codigo3D += condicion.etiquetaFalse+":\n";
+            for(let instruccion of this.listadoElse){
+                codigo = instruccion.traducir(controlador,tabla);
+                resultado.codigo3D += codigo.codigo3D;
+            }
+        }
+        return resultado;
     }
 
     recorrer(): Nodo {

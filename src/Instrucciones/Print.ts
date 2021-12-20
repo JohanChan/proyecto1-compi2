@@ -1,6 +1,8 @@
 import { AST } from "../AST/AST";
 import { Entorno } from "../AST/Entorno";
 import { Controlador } from "../Controlador";
+import { Logica } from "../Expresiones/Logica";
+import { Relacional } from "../Expresiones/Relacional";
 import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
@@ -24,7 +26,6 @@ export class Print implements Instruccion{
 
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
 
-        //console.log("Entro al print");
         let tamExp = this.expresiones.length;
         console.log("Numero de parametros: ", tamExp);
             for (let index = 0; index < tamExp; index++) {
@@ -35,16 +36,29 @@ export class Print implements Instruccion{
             if (this.salto === true) {
                 controlador.concatenar("\n");
             }
-        
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
         //throw new Error("Method not implemented.");
         console.log("Traduciendo Print... ", this.expresiones[0]);
-        let resultado:Resultado3D = this.expresiones[0].traducir(controlador,tabla);
-        resultado.codigo3D += Temporal.nuevaLinea(("************PRINTF***********"),"");
-        resultado.codigo3D += Temporal.nuevaLinea(("printf(\"%f\", " + resultado.temporal + ")"),"");
-        console.log("C3D Print.. ", resultado);
+        let resultado:Resultado3D;
+        for(let expresion of this.expresiones){
+            if(expresion instanceof Logica || expresion instanceof Relacional){
+                resultado = expresion.traducir(controlador,tabla);     
+                resultado.codigo3D += resultado.etiquetaTrue+":\n";
+                resultado.codigo3D += Temporal.nuevaLinea(("************PRINTF***********"),""); 
+                resultado.codigo3D += Temporal.nuevaLinea("printf(\"%c\", (char)116);\nprintf(\"%c\", (char)114);\nprintf(\"%c\", (char)117);\nprintf(\"%c\", (char)101);","");
+                resultado.codigo3D += resultado.etiquetaFalse+":\n";
+                resultado.codigo3D += Temporal.nuevaLinea(("************PRINTF***********"),""); 
+                resultado.codigo3D += Temporal.nuevaLinea("printf(\"%c\", (char)102);\nprintf(\"%c\", (char)97);\nprintf(\"%c\", (char)108);\nprintf(\"%c\", (char)115);\nprintf(\"%c\", (char)101);","");
+            }
+            resultado = expresion.traducir(controlador,tabla);
+        }
+        if(resultado.temporal == ""){
+            resultado.codigo3D += Temporal.nuevaLinea(("printf(\"%f\", " + resultado.valor + ")"),"");
+        }else{
+            resultado.codigo3D += Temporal.nuevaLinea(("printf(\"%f\", " + resultado.temporal + ")"),"");
+        }
         return resultado;
     }
 

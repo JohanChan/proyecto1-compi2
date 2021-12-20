@@ -1,6 +1,7 @@
 import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
+import { Etiqueta, Resultado3D, Temporal } from "../TablaSimbolos/Temporales";
 import { tipo } from "../TablaSimbolos/Tipo";
 import { Operacion, Operador } from "./Operacion";
 
@@ -163,5 +164,51 @@ export class Relacional extends Operacion implements Expresion{
                 }
                 break;
         }
+    }
+
+    traducir(controlador: Controlador, tabla: TablaSimbolos) {
+        let valorNodoIzq;
+        let valorNodoDer;
+
+        let nodoIzq:Resultado3D = new Resultado3D();
+        let nodoDer:Resultado3D = new Resultado3D();
+        let resultado:Resultado3D = new Resultado3D(); //nodo
+        
+        nodoIzq = this.expIzq.traducir(controlador,tabla);
+        nodoDer = this.exprDer.traducir(controlador,tabla); 
+        
+        valorNodoIzq = nodoIzq;
+        valorNodoDer = nodoDer;
+
+        resultado.codigo3D = resultado.codigo3D.concat(nodoIzq.codigo3D);
+        resultado.codigo3D = resultado.codigo3D.concat(nodoDer.codigo3D);
+
+        let etiqueta1 = Etiqueta.generarEtiqueta();
+        let etiqueta2 = Etiqueta.generarEtiqueta();
+        //Temporal.temporales.push(temporal);
+        if(nodoIzq.temporal != "" && nodoDer.temporal != ""){
+            resultado.codigo3D += nodoIzq.codigo3D;
+            resultado.codigo3D += nodoDer.codigo3D;
+            resultado.codigo3D +=Temporal.nuevaLinea("if("+nodoIzq.temporal+this.operadorString+nodoDer.temporal+") goto "+etiqueta1,"");
+            resultado.codigo3D +=Temporal.nuevaLinea("goto "+etiqueta2,"");
+        }else if(nodoIzq.temporal == "" && nodoDer.temporal != ""){
+            resultado.codigo3D += nodoDer.codigo3D;
+            resultado.codigo3D +=Temporal.nuevaLinea("if("+nodoIzq.valor+this.operadorString+nodoDer.temporal+") goto "+etiqueta1,"");
+            resultado.codigo3D +=Temporal.nuevaLinea("goto "+etiqueta2,"");
+        }else if(nodoIzq.temporal != "" && nodoDer.temporal == ""){
+            resultado.codigo3D += nodoIzq.codigo3D;
+            resultado.codigo3D +=Temporal.nuevaLinea("if("+nodoIzq.temporal+this.operadorString+nodoDer.valor+") goto "+etiqueta1,"");
+            resultado.codigo3D +=Temporal.nuevaLinea("goto "+etiqueta2,"");
+        }else if(nodoIzq.temporal == "" && nodoDer.temporal == ""){
+            resultado.codigo3D +=Temporal.nuevaLinea("if("+nodoIzq.valor+this.operadorString+nodoDer.valor+") goto "+etiqueta1,"");
+            resultado.codigo3D +=Temporal.nuevaLinea("goto "+etiqueta2,"");
+        }
+
+        //resultado.temporal = temporal;
+        //console.log("Valor de relacional en traduccion "+this.getValorImplicito(controlador,tabla));
+        resultado.etiquetaTrue = etiqueta1;
+        resultado.etiquetaFalse = etiqueta2;
+        resultado.valor = this.getValorImplicito(controlador,tabla);
+        return resultado;
     }
 }
