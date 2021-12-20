@@ -1,5 +1,5 @@
 %lex
-%options case-insensitive
+%options case-sensitive
 %option yylineno
 
 /* Expresiones regulares */
