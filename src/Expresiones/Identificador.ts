@@ -29,11 +29,18 @@ export class Identificador implements Expresion{
     }
     
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
-        let resultado3D = new Resultado3D();
+        let idExiste = tabla.getSimbolo(this.identificador); //Devuelve un objeto de tipo Simbolo
+        if(idExiste != null){
+            console.log("Traduciendo identificador... ", idExiste.valor);
+            return idExiste.valor;
+        }else{
+            console.log('Error semantico: no existe la variables ',idExiste);
+        }
+        /*let resultado3D = new Resultado3D();
         resultado3D.codigo3D = "";
         resultado3D.tipo = tabla.getSimbolo(this.identificador).tipo.type;
         resultado3D.temporal = "";
-        return Resultado3D;
+        return Resultado3D;*/
     }
     
 }

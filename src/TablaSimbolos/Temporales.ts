@@ -1,10 +1,10 @@
 export class Temporal{
-    public static temporales:Array<any> = new Array();
-    public static contadorTemp: number = 1;
-    public heap:Array<any>;
-    public stack:Array<any>;
-    public h:any;
-    public s:any;
+    public static temporales:Array<String> = new Array();
+    public static contadorTemp: number = 0;
+    public static heap:Array<any> = new Array();
+    public static stack:Array<any> = new Array();
+    public static h:any;
+    public static s:number = 0;
     public static nombre:any;
     public static utilizado:boolean;
 

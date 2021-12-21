@@ -5,6 +5,7 @@ import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
+import { Resultado3D, Temporal } from '../TablaSimbolos/Temporales';
 
 export class Asignacion implements Instruccion{
 
@@ -38,7 +39,25 @@ export class Asignacion implements Instruccion{
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos){
-        throw new Error("Method not implemented.");
+        let resultado:Resultado3D = new Resultado3D(); //nodo
+        if(tabla.existe(this.id)){
+            let posStack = tabla.getSimbolo(this.id).posicionStack;
+            let temporal;
+            let aux = this.valor.getValorImplicito(controlador,tabla);
+            let tip = this.valor.getTipo(controlador,tabla);
+            let auxTipo = tabla.getSimbolo(this.id).tipo; 
+            //if(auxTipo.type === tip || (auxTipo.type === tipo.DOUBLE && tip === tipo.INT) || (auxTipo.type === tipo.CARACTER && tip === tipo.STRING) || (auxTipo.type === tipo.INT && tip === tipo.DOUBLE)){
+            tabla.getSimbolo(this.id).setValor(aux);
+            Temporal.stack[posStack] = aux;
+            resultado.codigo3D += (Temporal.nuevaLinea("stack[(int)" + posStack + "] = " + aux, "" ));
+            //}else{
+                //console.log('Error semantico: variable no compatible');
+            //}
+        }else{
+            console.log('variable no existe');
+        }
+        console.log("C3D Asignacion... \n", resultado.codigo3D);
+        return resultado;
     }
 
     recorrer(): Nodo {

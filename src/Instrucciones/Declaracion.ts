@@ -5,6 +5,7 @@ import { Instruccion } from "../Interfaces/Instruccion";
 import {Simbolo} from "../TablaSimbolos/Simbolo";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import {Tipo, tipo} from "../TablaSimbolos/Tipo"
+import { Resultado3D, Temporal } from '../TablaSimbolos/Temporales';
 
 export class Declaracion implements Instruccion{
     public type: Tipo;
@@ -45,7 +46,32 @@ export class Declaracion implements Instruccion{
     }
 
     traducir(controlador: Controlador, tabla: TablaSimbolos){
-
+        let resultado:Resultado3D = new Resultado3D(); //nodo
+        for(let simbol of this.simbolo){
+            if(simbol.valor != null){
+                let id = simbol.indentificador;
+                console.log("EXPRESION... ", id);
+                let valor = simbol.valor.getValorImplicito(controlador,tabla);
+                let tip = simbol.valor.getTipo(controlador,tabla);
+                let nuevo = new Simbolo(simbol.simbolo, this.type, simbol.indentificador, valor);
+                Temporal.stack.push(valor); //Se le asigna al stack el valor de la variable (SI ES PRIMITIVO);
+                Temporal.s++;
+                nuevo.posicionStack = Temporal.s; //Posicion de stack donde esta almacenado el valor de la variable
+                let temporal = Temporal.generarTemporal();
+                Temporal.temporales.push(temporal);
+                nuevo.temporal = temporal; //Temporal equivalente a la variable
+                tabla.agregar(simbol.indentificador, nuevo);
+                resultado.codigo3D += (Temporal.nuevaLinea("stack[(int)" + nuevo.posicionStack + "] = " + nuevo.valor, "" ));
+                resultado.codigo3D += (Temporal.nuevaLinea(temporal + " = stack[(int)" + nuevo.posicionStack + "] " , "" ));
+                //console.log("Declaracion con asignacion... ", resultado.codigo3D)
+                
+            }else{
+                let nuevoS = new Simbolo(simbol.simbolo, this.type, simbol.indentificador, simbol.valor.valor);
+                tabla.agregar(simbol.indentificador, nuevoS);
+            }
+        }
+        console.log("C3D Declaracion... \n", resultado.codigo3D);
+        return resultado;
     }
 
     recorrer(): Nodo {

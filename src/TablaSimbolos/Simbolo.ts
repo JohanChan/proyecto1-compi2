@@ -13,9 +13,10 @@ export class Simbolo {
     public valores: Array<any>;
     public parametros: Array<Simbolo>;
     public meotodo: boolean;
-    public posicionStakc: number; //POSICION EN LA MEMORIA STACK
+    public posicionStack: number; //POSICION EN LA MEMORIA STACK
+    public temporal: string; //TEMPORAL EQUIVALENTE A LA VARIABLE
 
-    constructor(simbolo: number, tipo:Tipo, id:string, valor:any, parametros?, metodo?,  valores?:Array<any> ){
+    constructor(simbolo: number, tipo:Tipo, id:string, valor:any, parametros?, metodo?,  valores?:Array<any>, posStack?:number, temporal?:any  ){
         this.simbolo = simbolo; //1=variable;2=arreglo
         this.indentificador = id;
         this.tipo = tipo;
