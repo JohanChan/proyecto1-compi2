@@ -306,10 +306,8 @@ lista_print:    lista_print COMA expresion      { $1.push($3); $$ = $1; }
             ;
 
 if_instr:       IF PARA expresion PARC LLAVEA instrucciones LLAVEC                                  { $$ = new If($3, $6, [], @1.first_line, @1.last_column); }
-            |   IF PARA expresion PARC instruccion                                                  { $$ = new If($3, $5, [], @1.first_line, @1.last_column); }
             |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE LLAVEA instrucciones LLAVEC { $$ = new If($3, $6, $10, @1.first_line, @1.last_column); }
-            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE instruccion                 { $$ = new If($3, $6, $9, @1.first_line, @1.last_column); }
-            /*|   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE if_instr */
+            |   IF PARA expresion PARC LLAVEA instrucciones LLAVEC ELSE if_instr                    { $$ = new If($3, $6, [$9], @1.first_line, @1.last_column); }
             ;
 
 
