@@ -1,6 +1,7 @@
 import { AST } from "../AST/AST";
 import { Entorno } from "../AST/Entorno";
 import { Controlador } from "../Controlador";
+import { Identificador } from "../Expresiones/Identificador";
 import { Logica } from "../Expresiones/Logica";
 import { Relacional } from "../Expresiones/Relacional";
 import { Expresion } from "../Interfaces/Expresion";
@@ -41,7 +42,7 @@ export class Print implements Instruccion{
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
         //throw new Error("Method not implemented.");
         console.log("Traduciendo Print... ", this.expresiones[0]);
-        let resultado:Resultado3D;
+        let resultado:Resultado3D = new Resultado3D();
         for(let expresion of this.expresiones){
             if(expresion instanceof Logica || expresion instanceof Relacional){
                 resultado = expresion.traducir(controlador,tabla);     
@@ -52,12 +53,27 @@ export class Print implements Instruccion{
                 resultado.codigo3D += Temporal.nuevaLinea(("************PRINTF***********"),""); 
                 resultado.codigo3D += Temporal.nuevaLinea("printf(\"%c\", (char)102);\nprintf(\"%c\", (char)97);\nprintf(\"%c\", (char)108);\nprintf(\"%c\", (char)115);\nprintf(\"%c\", (char)101);","");
             }
+            /*if(expresion instanceof Identificador){
+                console.log("La expresion es un identificador... ");
+                let valor = expresion.traducir(controlador,tabla);
+                resultado.codigo3D += Temporal.nuevaLinea(("************PRINTF***********"),""); 
+                resultado.valor = valor;
+                console.log("Variable a imprimir " + valor.temporal);
+                
+            }*/
             resultado = expresion.traducir(controlador,tabla);
         }
         if(resultado.temporal == ""){
             resultado.codigo3D += Temporal.nuevaLinea(("printf(\"%f\", " + resultado.valor + ")"),"");
         }else{
-            resultado.codigo3D += Temporal.nuevaLinea(("printf(\"%f\", " + resultado.temporal + ")"),"");
+            let temp = tabla.getSimbolo(resultado.temporal).temporal
+            if (temp != null) {
+                console.log("Es un identificador :c");
+                resultado.codigo3D += Temporal.nuevaLinea(("printf(\"%f\", " + temp + ")"),"");
+            }else{
+                resultado.codigo3D += Temporal.nuevaLinea(("printf(\"%f\", " + resultado.temporal + ")"),"");
+            } 
+            
         }
         return resultado;
     }

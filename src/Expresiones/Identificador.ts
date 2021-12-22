@@ -29,18 +29,20 @@ export class Identificador implements Expresion{
     }
     
     traducir(controlador: Controlador, tabla: TablaSimbolos) {
-        let idExiste = tabla.getSimbolo(this.identificador); //Devuelve un objeto de tipo Simbolo
+        /*let idExiste = tabla.getSimbolo(this.identificador); //Devuelve un objeto de tipo Simbolo
         if(idExiste != null){
             console.log("Traduciendo identificador... ", idExiste.valor);
             return idExiste.valor;
         }else{
             console.log('Error semantico: no existe la variables ',idExiste);
-        }
-        /*let resultado3D = new Resultado3D();
+        }*/
+        let resultado3D = new Resultado3D();
         resultado3D.codigo3D = "";
         resultado3D.tipo = tabla.getSimbolo(this.identificador).tipo.type;
-        resultado3D.temporal = "";
-        return Resultado3D;*/
+        resultado3D.valor = tabla.getSimbolo(this.identificador).getValorImplicito(controlador,tabla);
+        resultado3D.temporal = this.identificador;
+        console.log("Traduciendo Identificador... " + resultado3D.valor + resultado3D.temporal);
+        return resultado3D;
     }
     
 }
