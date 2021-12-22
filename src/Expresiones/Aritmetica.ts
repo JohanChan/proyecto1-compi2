@@ -40,10 +40,10 @@ export class Aritmetica extends Operacion implements Expresion {
                     if (typeof valorDer === 'number') {
                         return valorIzq + valorDer;
                     } else {
-                        console.log('Error semantico: valor debe ser númerico');
+                        console.log('Error semantico: valor debe ser númerico ', this.linea, " ", this.columna);
                     }
                 } else {
-                    console.log('Error semantico: valor debe ser númerico');
+                    console.log('Error semantico: valor debe ser númerico ' , this.linea, " ", this.columna);
                 }
                 break;
             case Operador.RESTA:

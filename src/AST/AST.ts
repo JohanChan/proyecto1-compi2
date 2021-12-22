@@ -6,6 +6,8 @@ import { TablaSimbolos } from "TablaSimbolos/TablaSimbolos";
 import { Main } from '../Instrucciones/FuncionesMetodos/Main'
 import { Metodo } from "../Instrucciones/FuncionesMetodos/Metodo";
 import { Declaracion } from '../Instrucciones/Declaracion'
+import { Arreglo } from '../Instrucciones/Arreglo'
+import { ModArreglo } from '../Instrucciones/ModArreglo'
 import { Temporal } from "TablaSimbolos/Temporales";
 export class AST {
 
@@ -36,6 +38,12 @@ export class AST {
                 return;
             }
             if (instruccion instanceof Declaracion) {
+                instruccion.ejecutar(controlador, tabla);
+            }
+            if (instruccion instanceof Arreglo) {
+                instruccion.ejecutar(controlador, tabla);
+            }
+            if (instruccion instanceof ModArreglo) {
                 instruccion.ejecutar(controlador, tabla);
             }
         }

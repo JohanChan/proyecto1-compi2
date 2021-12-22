@@ -24,7 +24,7 @@ export class Identificador implements Expresion{
         if(idExiste != null){
             return idExiste.valor;
         }else{
-            console.log('Error semantico: no existe la variables ',idExiste);
+            console.log('Error semantico: no existe la variables ', idExiste, " ", this.linea, " ", this.columna);
         }
     }
     

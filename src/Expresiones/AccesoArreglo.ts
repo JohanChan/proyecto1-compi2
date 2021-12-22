@@ -27,13 +27,13 @@ export class AccesoArreglo implements Expresion{
             let pos = this.posicion.getValorImplicito(controlador,tabla);
             //console.log("Posicion a llamar: ", pos);
             if (pos >= tabla.getSimbolo(this.identificador).getTamArr()) {
-                console.log("El indice excede el tamaño del arreglo");
+                console.log("El indice excede el tamaño del arreglo ", this.linea, " ", this.columna);
                     return
             }else{
                 return idExiste.valores[pos];
             }
         }else{
-            console.log('Error semantico: no existe el arreglo ',idExiste);
+            console.log('Error semantico: no existe el arreglo ',idExiste,  " ", this.linea, " ", this.columna);
         }
     }
     traducir(controlador: Controlador, tabla: TablaSimbolos) {

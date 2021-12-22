@@ -42,7 +42,7 @@ export class Relacional extends Operacion implements Expresion{
                     }else if (typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq === valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
                 }else if(typeof valorIzq === 'string' && valorIzq.length === 1){
                     if(typeof valorDer === 'number'){
@@ -50,12 +50,15 @@ export class Relacional extends Operacion implements Expresion{
                     }else if(typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq.charCodeAt(0) === valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ' , this.linea, " ", this.columna);
                     }
                 }else if(typeof valorIzq === 'string' && typeof valorDer === 'string'){
                     return valorIzq === valorDer;
-                }else{
-                    console.log('Error semantico: se esperaba valor tipo numero o string');
+                }else if(typeof valorIzq == 'boolean' && typeof valorDer === 'boolean'){
+                    return valorIzq === valorDer;
+                }
+                else{
+                    console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                 }
                 break;
             case Operador.DIFERENTE:
@@ -65,18 +68,21 @@ export class Relacional extends Operacion implements Expresion{
                     }else if (typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq != valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
                 }else if(typeof valorIzq === 'string' && valorIzq.length === 1){
                     if(typeof valorDer === 'number'){
                         return valorIzq.charCodeAt(0) != valorDer;
                     }else if(typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq.charCodeAt(0) != valorDer.charCodeAt(0);
-                    }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
                     }
+                    else{
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
+                    }
+                }else if(typeof valorIzq == 'boolean' && typeof valorDer === 'boolean'){
+                    return valorIzq != valorDer;
                 }else{
-                    console.log('Error semantico: se esperaba valor tipo numero o string');
+                    console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                 }
                 break;
             case Operador.MARYOQUE:
@@ -86,7 +92,7 @@ export class Relacional extends Operacion implements Expresion{
                     }else if (typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq > valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
                 }else if(typeof valorIzq === 'string' && valorIzq.length === 1){
                     if(typeof valorDer === 'number'){
@@ -94,10 +100,13 @@ export class Relacional extends Operacion implements Expresion{
                     }else if(typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq.charCodeAt(0) > valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
+                }
+                else if(typeof valorIzq == 'boolean' && typeof valorDer === 'boolean'){
+                    return valorIzq > valorDer;
                 }else{
-                    console.log('Error semantico: se esperaba valor tipo numero o string');
+                    console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                 }
                 break;
             case Operador.MENORQUE:
@@ -107,7 +116,7 @@ export class Relacional extends Operacion implements Expresion{
                     }else if (typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq < valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
                 }else if(typeof valorIzq === 'string' && valorIzq.length === 1){
                     if(typeof valorDer === 'number'){
@@ -115,10 +124,13 @@ export class Relacional extends Operacion implements Expresion{
                     }else if(typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq.charCodeAt(0) < valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
+                }
+                else if(typeof valorIzq == 'boolean' && typeof valorDer === 'boolean'){
+                    return valorIzq < valorDer;
                 }else{
-                    console.log('Error semantico: se esperaba valor tipo numero o string');
+                    console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                 }
                 break;
             case Operador.MAYORIGUALQUE:
@@ -128,7 +140,7 @@ export class Relacional extends Operacion implements Expresion{
                     }else if (typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq >= valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
                 }else if(typeof valorIzq === 'string' && valorIzq.length === 1){
                     if(typeof valorDer === 'number'){
@@ -136,10 +148,13 @@ export class Relacional extends Operacion implements Expresion{
                     }else if(typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq.charCodeAt(0) >= valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
+                }
+                else if(typeof valorIzq == 'boolean' && typeof valorDer === 'boolean'){
+                    return valorIzq >= valorDer;
                 }else{
-                    console.log('Error semantico: se esperaba valor tipo numero o string');
+                    console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                 }
                 break;
             case Operador.MENORIGUALQUE:
@@ -149,7 +164,7 @@ export class Relacional extends Operacion implements Expresion{
                     }else if (typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq <= valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
                 }else if(typeof valorIzq === 'string' && valorIzq.length === 1){
                     if(typeof valorDer === 'number'){
@@ -157,10 +172,13 @@ export class Relacional extends Operacion implements Expresion{
                     }else if(typeof valorDer === 'string' && valorDer.length === 1){
                         return valorIzq.charCodeAt(0) <= valorDer.charCodeAt(0);
                     }else{
-                        console.log('Error semantico: se esperaba valor tipo numero o string');
+                        console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                     }
+                }
+                else if(typeof valorIzq == 'boolean' && typeof valorDer === 'boolean'){
+                    return valorIzq <= valorDer;
                 }else{
-                    console.log('Error semantico: se esperaba valor tipo numero o string');
+                    console.log('Error semantico: se esperaba valor tipo numero o string ', this.linea, " ", this.columna);
                 }
                 break;
         }
