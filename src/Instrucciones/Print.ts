@@ -8,6 +8,7 @@ import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { Resultado3D, Temporal } from "../TablaSimbolos/Temporales";
+import { Llamada } from "./FuncionesMetodos/Llamada";
 
 // print("hola mundo");
 
@@ -30,6 +31,10 @@ export class Print implements Instruccion{
         let tamExp = this.expresiones.length;
         console.log("Numero de parametros: ", tamExp);
             for (let index = 0; index < tamExp; index++) {
+                let llamada = this.expresiones[index] as Expresion;
+                if(llamada instanceof Llamada){
+                    llamada.ejecutar(controlador,tabla);
+                }
                 let exp = this.expresiones[index].getValorImplicito(controlador,tabla);
                 console.log(exp);
                 controlador.concatenar(exp);

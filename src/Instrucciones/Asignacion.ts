@@ -6,6 +6,7 @@ import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
 import { Resultado3D, Temporal } from '../TablaSimbolos/Temporales';
+import { Llamada } from "./FuncionesMetodos/Llamada";
 
 export class Asignacion implements Instruccion{
 
@@ -24,11 +25,16 @@ export class Asignacion implements Instruccion{
     
     ejecutar(controlador: Controlador, tabla: TablaSimbolos) {
         if(tabla.existe(this.id)){
-            console.log('Que uvas');
+            //console.log('Que uvas');
+            if(this.valor instanceof Llamada){
+                    this.valor.ejecutar(controlador,tabla);
+            }
             let aux = this.valor.getValorImplicito(controlador,tabla);
             let tip = this.valor.getTipo(controlador,tabla);
             let auxTipo = tabla.getSimbolo(this.id).tipo; 
+
             if(auxTipo.type === tip || (auxTipo.type === tipo.DOUBLE && tip === tipo.INT) || (auxTipo.type === tipo.CARACTER && tip === tipo.STRING) || (auxTipo.type === tipo.INT && tip === tipo.DOUBLE)){
+
                 tabla.getSimbolo(this.id).setValor(aux);
             }else{
                 console.log('Error semantico: variable no compatible');

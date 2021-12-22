@@ -25,7 +25,6 @@ export class Llamada implements Instruccion, Expresion {
             let simbol = tabla.getSimbolo(this.identificador) as Metodo;
             if (this.mismoMetodo(simbol, controlador, tablaLocal)) {
                 let retorno = simbol.ejecutar(controlador, tablaLocal);
-                
                 if (retorno != null) {
                     console.log('Retorno llamada '+retorno);
                     return retorno;
@@ -50,17 +49,24 @@ export class Llamada implements Instruccion, Expresion {
         return tip.tipo.type;
     }
     getValorImplicito(controlador: Controlador, tabla: TablaSimbolos) {
-        console.log('Estoy en llamada como expresion :v');
+        console.log("tabla valor I ",tabla.getSimbolo(this.identificador).valor);
+        return tabla.getSimbolo(this.identificador).valor;
+        /*console.log('Estoy en llamada como expresion :v');
         let simbol = tabla.getSimbolo(this.identificador) as Metodo;
         let tablaLocal = new TablaSimbolos(tabla);
         if (this.mismoMetodo(simbol, controlador, tablaLocal)) {
+            console.log("Si es el mismo metodo :D");
             for (let instruccion of simbol.listaInstrucciones) {
                 if (instruccion instanceof Retonar) {
-                    instruccion.ejecutar(controlador, tabla);
-                    return instruccion.retorno.getValorImplicito(controlador,tabla);
+                    //console.log(instruccion.ejecutar(controlador, tabla));
+                    let ret = instruccion.ejecutar(controlador, tabla);
+                    console.log('Retorno llamada '+ret);
+                    //return ret;
                 }
             }
-        }
+        }else{
+            console.log("No es el mismo metodo :v");
+        }*/
     }
     mismoMetodo(simbol: Metodo, controlador: Controlador, tablaLocal: TablaSimbolos): boolean {
         let contador = 0;

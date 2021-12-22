@@ -6,6 +6,7 @@ import {Simbolo} from "../TablaSimbolos/Simbolo";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import {Tipo, tipo} from "../TablaSimbolos/Tipo";
 import { Resultado3D, Temporal } from '../TablaSimbolos/Temporales';
+import { Llamada } from "./FuncionesMetodos/Llamada";
 
 export class Declaracion implements Instruccion{
     public type: Tipo;
@@ -29,7 +30,12 @@ export class Declaracion implements Instruccion{
                 console.log('Error semantico: variable existe en entorno actual');
             }
             //console.log('Valor de simbolo entrante ',simbol.valor);
+
+
             if(simbol.valor != null){
+                if(simbol.valor instanceof Llamada){
+                    simbol.valor.ejecutar(controlador,tabla);
+                }
                 let valor = simbol.valor.getValorImplicito(controlador,tabla);
 
                 let tip = simbol.valor.getTipo(controlador,tabla);
