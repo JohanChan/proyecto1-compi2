@@ -5,7 +5,7 @@ import { TablaSimbolos } from "../../TablaSimbolos/TablaSimbolos";
 import {Continuar} from "../SentenciaTransferencia/Continuar";
 import {Detener} from "../SentenciaTransferencia/Detener";
 
-export class While implements Instruccion{
+export class DoWhile implements Instruccion{
     public linea: number;
     public columna: number;
     public condicion: Expresion;
