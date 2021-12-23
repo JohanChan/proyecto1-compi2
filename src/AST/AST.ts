@@ -8,7 +8,7 @@ import { Metodo } from "../Instrucciones/FuncionesMetodos/Metodo";
 import { Declaracion } from '../Instrucciones/Declaracion'
 import { Arreglo } from '../Instrucciones/Arreglo'
 import { ModArreglo } from '../Instrucciones/ModArreglo'
-import { Temporal } from "TablaSimbolos/Temporales";
+import { Temporal } from "../TablaSimbolos/Temporales";
 export class AST {
 
     public instrucciones: Array<Instruccion>
@@ -66,7 +66,7 @@ export class AST {
         encabezado += "float stack[30101999];\n\n";
         encabezado += "float P;\n";
         encabezado += "float H;\n";
-
+/*
         let numeroT = codigo.temporal.split("t");
         if (numeroT.lenght > 0) {
             encabezado += "float ";
@@ -77,6 +77,14 @@ export class AST {
                 } else {
                     encabezado += "t" + i + ", "
                 }
+            }
+        }
+*/
+        for (let index = 0; index < Temporal.contadorTemp; index++) {
+            if (index == Temporal.contadorTemp-1) {
+                encabezado += "t" + index + ";";
+            } else {
+                encabezado += "t" + index + ", ";
             }
         }
 
