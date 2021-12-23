@@ -52,6 +52,9 @@
                 <li class="nav-item">
                     <a class="nav-link btn btn-outline-info" data-toggle="tab" href="#trad">Traductor</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-info" data-toggle="tab" href="#simb">Tabla Simbolos</a>
+                </li>
             </ul>
 
             <div id="myTabContent" class="tab-content">
@@ -73,6 +76,8 @@
                                 name="compilar">
                             <input type="button" value="Traducir" class="mt-3 btn btn-success" id="traducir"
                                 name="traducir">
+                            <input type="button" value="Simbolos" class="mt-3 btn btn-success" id="simbolos"
+                                name="simbolos">
                         </form>
 
                     </div>
@@ -103,6 +108,14 @@
                         <form action="">
                             <textarea class="box message form-control" id="traductor" name="traductor" rows="15"></textarea>
                         </form>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade mt-3" id="simb">
+                    <div class="form-floating">
+                        <div id="simbolo" class="simbolo">
+
+                        </div>
                     </div>
                 </div>
 

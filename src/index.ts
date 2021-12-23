@@ -53,4 +53,27 @@ traducBtn?.addEventListener('click', () => {
   }
 })
 
+
+const tablaSimbol = document.getElementById('simbolos')
+tablaSimbol?.addEventListener('click', () => {
+  try {
+    let txt = (<HTMLInputElement>document.getElementById('code')).value;
+    let ast:any = parser.parse(txt);
+    let controlador = new Controlador();
+    let tabla = new TablaSimbolos(null);
+    ast.ejecutar(controlador,tabla);
+    let consola = controlador.consola;
+    RSimbolo.obtenerSimbolo();
+   // (<HTMLInputElement>document.getElementById('simbolo')).value = RSimbolo.html;
+   const dato = document.querySelector('simbolo')
+   dato.innerHTML = RSimbolo.html
+    
+  
+  } catch(e) {
+    console.log("Error al analizar ",e);
+  }
+})
+
+
+
 export default {}
