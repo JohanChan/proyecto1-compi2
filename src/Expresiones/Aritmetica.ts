@@ -6,6 +6,7 @@ import { AST } from '../AST/AST';
 import { Entorno } from '../AST/Entorno';
 import { Controlador } from '../Controlador';
 import { Resultado3D, Temporal } from '../TablaSimbolos/Temporales';
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Aritmetica extends Operacion implements Expresion {
     public constructor(expIzq, operador, exprDer, linea, columna, esUnario) {
@@ -41,9 +42,11 @@ export class Aritmetica extends Operacion implements Expresion {
                         return valorIzq + valorDer;
                     } else {
                         console.log('Error semantico: valor debe ser númerico ', this.linea, " ", this.columna);
+                        RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: valor debe ser númerico ' , this.linea, " ", this.columna);
+                    RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                 }
                 break;
             case Operador.RESTA:
@@ -52,9 +55,11 @@ export class Aritmetica extends Operacion implements Expresion {
                         return valorIzq - valorDer;
                     } else {
                         console.log('Error semantico: valor debe ser númerico');
+                        RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                 }
                 break;
             case Operador.MULTIPLICACION:
@@ -63,9 +68,11 @@ export class Aritmetica extends Operacion implements Expresion {
                         return valorIzq * valorDer;
                     } else {
                         console.log('Error semantico: valor debe ser númerico');
+                        RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                 }
                 break;
             case Operador.DIVISION:
@@ -74,9 +81,11 @@ export class Aritmetica extends Operacion implements Expresion {
                         return valorIzq / valorDer;
                     } else {
                         console.log('Error semantico: valor debe ser númerico');
+                        RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                 }
                 break;
             case Operador.MOD:
@@ -85,9 +94,11 @@ export class Aritmetica extends Operacion implements Expresion {
                         return valorIzq % valorDer;
                     } else {
                         console.log('Error semantico: valor debe ser númerico');
+                        RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                 }
                 break;
             case Operador.UNARIO:
@@ -95,6 +106,7 @@ export class Aritmetica extends Operacion implements Expresion {
                     return -valorUnario;
                 }else{
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                 }
                 break;
         }

@@ -5,6 +5,7 @@ import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Pop implements Instruccion{
 
@@ -25,6 +26,7 @@ export class Pop implements Instruccion{
             //console.log("Se hizo pop al arreglo :D");
         }else{
             console.log('Arreglo no existe');
+            RErrores.agregarError("Semantico","Arreglo no existe",this.linea,this.columna)
         }
     }
 

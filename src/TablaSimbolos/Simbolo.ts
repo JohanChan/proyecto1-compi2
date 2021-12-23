@@ -5,6 +5,7 @@ import { Controlador } from "Controlador";
 import { TablaSimbolos } from "./TablaSimbolos";
 import { Resultado3D,Temporal } from "./Temporales";
 
+
 export class Simbolo {
     public indentificador: string;
     public valor: any;
@@ -24,6 +25,7 @@ export class Simbolo {
 	    this.valores = valores; //VALORES POR SI ES ARREGLO
         this.parametros = parametros;
         this.meotodo = metodo;
+        
     }
     
     getValorImplicito(controlador: Controlador, tabla: TablaSimbolos) {

@@ -3,6 +3,7 @@ import { Expresion } from "../Interfaces/Expresion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
 import { Operacion, Operador } from "./Operacion";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Cadena extends Operacion implements Expresion {
     constructor(expIzq, operador, expDer, linea, columna, esUnario) {
@@ -62,9 +63,11 @@ export class Cadena extends Operacion implements Expresion {
                         return res;
                     } else {
                         console.log('Error semantico: se esperaba valor tipo numerico');
+                        RErrores.agregarError("Semantico","valor debe ser númerico",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: se esperaba valor tipo string');
+                    RErrores.agregarError("Semantico","valor debe ser string",this.linea,this.columna);
                 }
                 break;
         }

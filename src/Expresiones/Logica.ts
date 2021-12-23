@@ -5,6 +5,7 @@ import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { Etiqueta, Resultado3D, Temporal } from "../TablaSimbolos/Temporales";
 import { tipo } from "../TablaSimbolos/Tipo";
 import { Operacion, Operador } from "./Operacion";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Logica extends Operacion implements Expresion {
 
@@ -43,9 +44,11 @@ export class Logica extends Operacion implements Expresion {
                         return valorIzq && valorDer;
                     } else {
                         console.log('Error semantico: se esperaba tipo boolean');
+                        RErrores.agregarError("Semantico","valor debe ser boolean",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: se esperaba tipo boolean');
+                    RErrores.agregarError("Semantico","valor debe ser boolean",this.linea,this.columna);
                 }
                 break;
             case Operador.OR:
@@ -54,9 +57,11 @@ export class Logica extends Operacion implements Expresion {
                         return valorIzq || valorDer;
                     } else {
                         console.log('Error semantico: se esperaba tipo boolean');
+                        RErrores.agregarError("Semantico","valor debe ser boolean",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: se esperaba tipo boolean');
+                    RErrores.agregarError("Semantico","valor debe ser boolean",this.linea,this.columna);
                 }
                 break;
             case Operador.NOT:
@@ -64,6 +69,7 @@ export class Logica extends Operacion implements Expresion {
                     return !valorUnario;
                 } else {
                     console.log('Error semantico: se esperaba tipo boolean');
+                    RErrores.agregarError("Semantico","valor debe ser boolean",this.linea,this.columna);
                 }
                 break;
         }

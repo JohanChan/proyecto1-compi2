@@ -2,6 +2,7 @@ import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class ObtenerArreglo implements Expresion{
     linea: number;
@@ -20,7 +21,7 @@ export class ObtenerArreglo implements Expresion{
         this.final = final;
         this.begin = begin;
         this.end = end;
-        console.log("Obteniendo arreglo... ", this.inicio);
+        //console.log("Obteniendo arreglo... ", this.inicio);
     }
     getTipo(contolador: Controlador, tabla: TablaSimbolos): tipo {
         let idExiste = tabla.getSimbolo(this.identificador);
@@ -53,6 +54,7 @@ export class ObtenerArreglo implements Expresion{
             console.log("Inicio: ", ini, " Final: ", fin);
             if ((ini < 0) || (fin >= tamArr) || (ini >= tamArr) || (fin < ini)) {
                 console.log("Error: Indice fuera del rango");
+                RErrores.agregarError("Semantico","indice fuera del rango",this.linea,this.columna);
             }else{
                 console.log("Rango Solicitado: ", idExiste.getArregloRang(ini,fin));
                 return idExiste.getArregloRang(ini,fin);
@@ -60,6 +62,7 @@ export class ObtenerArreglo implements Expresion{
             
         }else{
             console.log('Error semantico: no existe el arreglo ');
+            RErrores.agregarError("Semantico","no exite el arreglo",this.linea,this.columna);
         }
     }
     traducir(controlador: Controlador, tabla: TablaSimbolos) {

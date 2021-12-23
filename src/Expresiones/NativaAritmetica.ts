@@ -5,6 +5,7 @@ import { Resultado3D, Temporal } from "../TablaSimbolos/Temporales";
 import { tipo } from "../TablaSimbolos/Tipo";
 import { Aritmetica } from "./Aritmetica";
 import { Operacion, Operador } from "./Operacion";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class NativaAritmetica extends Operacion implements Expresion {
 
@@ -38,9 +39,11 @@ export class NativaAritmetica extends Operacion implements Expresion {
                         return Math.pow(valIzq, valDer);
                     } else {
                         console.log('Error semantico: valor debe ser númerico');
+                        RErrores.agregarError("Semantico","valor debe ser numerico",this.linea,this.columna);
                     }
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser numerico",this.linea,this.columna);
                 }
                 break;
             case Operador.RAIZCUADRADA:
@@ -48,6 +51,7 @@ export class NativaAritmetica extends Operacion implements Expresion {
                     return Math.sqrt(valIzq);
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser numerico",this.linea,this.columna);
                 }
                 break;
             case Operador.SENO:
@@ -55,6 +59,7 @@ export class NativaAritmetica extends Operacion implements Expresion {
                     return Math.sqrt(valIzq);
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser numerico",this.linea,this.columna);
                 }
                 break;
             case Operador.COSENO:
@@ -62,6 +67,7 @@ export class NativaAritmetica extends Operacion implements Expresion {
                     return Math.sqrt(valIzq);
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser numerico",this.linea,this.columna);
                 }
                 break;
             case Operador.TANGENTE:
@@ -69,6 +75,7 @@ export class NativaAritmetica extends Operacion implements Expresion {
                     return Math.sqrt(valIzq);
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser numerico",this.linea,this.columna);
                 }
                 break;
             case Operador.LOG10:
@@ -76,6 +83,7 @@ export class NativaAritmetica extends Operacion implements Expresion {
                     return Math.log10(valIzq);
                 } else {
                     console.log('Error semantico: valor debe ser númerico');
+                    RErrores.agregarError("Semantico","valor debe ser numerico",this.linea,this.columna);
                 }
                 break;
         }

@@ -7,6 +7,7 @@ import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
 import { Resultado3D, Temporal } from '../TablaSimbolos/Temporales';
 import { Llamada } from "./FuncionesMetodos/Llamada";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Asignacion implements Instruccion{
 
@@ -38,9 +39,11 @@ export class Asignacion implements Instruccion{
                 tabla.getSimbolo(this.id).setValor(aux);
             }else{
                 console.log('Error semantico: variable no compatible');
+                RErrores.agregarError("Semantico","variable no compatible",this.linea,this.columna)
             }
         }else{
             console.log('variable no existe');
+            RErrores.agregarError("Semantico","variable no existe",this.linea,this.columna)
         }
     }
 

@@ -3,6 +3,7 @@ import { Expresion } from "../Interfaces/Expresion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { Tipo, tipo } from "../TablaSimbolos/Tipo";
 import { Operacion, Operador } from "./Operacion";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class NativaCasteo implements Expresion {
     public expresion: Expresion;
@@ -43,6 +44,7 @@ export class NativaCasteo implements Expresion {
                     return Math.floor(exp);
                 } catch (error) {
                     console.log("Numero no flotante")
+                    RErrores.agregarError("Semantico","numero no flotante",this.linea,this.columna);
                 }
             break;
             case "todouble": 
@@ -50,6 +52,7 @@ export class NativaCasteo implements Expresion {
                     return parseFloat(String(exp)).toFixed(1);
                 } catch (error) {
                     console.log("Numero no entero")
+                    RErrores.agregarError("Semantico","numero no entero",this.linea,this.columna);
                 }
             break;
             case "tostring": 
@@ -57,6 +60,7 @@ export class NativaCasteo implements Expresion {
                     return String(exp);
                 } catch (error) {
                     console.log("No se pudo convertir a string")
+                    RErrores.agregarError("Semantico","no se pudo convertir a string",this.linea,this.columna);
                 }
             break;
             case "parse":
@@ -75,15 +79,18 @@ export class NativaCasteo implements Expresion {
                                 return parseInt(temp);
                             }else {
                                 console.log("No se puede convertir a boolean")
+                                RErrores.agregarError("Semantico","no se pudo convertir a bool",this.linea,this.columna);
                                 return;
                             }
                         break;
                     
                         default:
                             console.log("Tipo no valido");
+                            RErrores.agregarError("Semantico","tipo no valido",this.linea,this.columna);
                     }
                 } catch (error) {
                     console.log("No se reconocio el tipo")
+                    RErrores.agregarError("Semantico","no se reconocio el tipo",this.linea,this.columna);
                 }
             break;
         }

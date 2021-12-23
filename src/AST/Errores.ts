@@ -1,3 +1,5 @@
+import { RErrores } from "../TablaSimbolos/RErrores";
+
 export class Errores {
     public tipo: string;
     public descripcion: string;
@@ -9,5 +11,6 @@ export class Errores {
         this.descripcion = descripcion;
         this.fila = fila;
         this.columna = columna;
+        RErrores.agregarError(tipo,descripcion,fila,columna);
     }
 }

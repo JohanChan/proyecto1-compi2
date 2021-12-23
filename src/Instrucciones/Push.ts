@@ -5,6 +5,7 @@ import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Push implements Instruccion{
 
@@ -32,9 +33,11 @@ export class Push implements Instruccion{
                 //console.log("Se hizo push al arreglo :D");
             }else{
                 console.log('Error semantico: variable no compatible');
+                RErrores.agregarError("Semantico","arreglo no compatible",this.linea,this.columna)
             }
         }else{
             console.log('Arreglo no existe');
+            RErrores.agregarError("Semantico","arreglo no existe",this.linea,this.columna)
         }
     }
 

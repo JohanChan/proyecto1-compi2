@@ -2,6 +2,8 @@ import { Controlador } from "../Controlador";
 import { Expresion } from "../Interfaces/Expresion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
+import { Errores } from "../AST/Errores";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class AccesoArreglo implements Expresion{
     linea: number;
@@ -28,12 +30,14 @@ export class AccesoArreglo implements Expresion{
             //console.log("Posicion a llamar: ", pos);
             if (pos >= tabla.getSimbolo(this.identificador).getTamArr()) {
                 console.log("El indice excede el tamaño del arreglo ", this.linea, " ", this.columna);
-                    return
+                RErrores.agregarError("Semantico","El indice excede el tamaño del arreglo",this.linea,this.columna)
+                return
             }else{
                 return idExiste.valores[pos];
             }
         }else{
             console.log('Error semantico: no existe el arreglo ',idExiste,  " ", this.linea, " ", this.columna);
+            RErrores.agregarError("Semantico","no existe el arreglo",this.linea,this.columna)
         }
     }
     traducir(controlador: Controlador, tabla: TablaSimbolos) {

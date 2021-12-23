@@ -7,6 +7,8 @@ import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import {Tipo, tipo} from "../TablaSimbolos/Tipo";
 import { Resultado3D, Temporal } from '../TablaSimbolos/Temporales';
 import { Llamada } from "./FuncionesMetodos/Llamada";
+import { RSimbolo } from "../TablaSimbolos/RSimbolos";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Declaracion implements Instruccion{
     public type: Tipo;
@@ -28,6 +30,7 @@ export class Declaracion implements Instruccion{
             //console.log('Simnbolo ',simbol);
             if(tabla.existeActual(simbol.indentificador)){
                 console.log('Error semantico: variable existe en entorno actual');
+                RErrores.agregarError("Semantico","variable existe en entorno actual",this.linea,this.columna)
             }
             //console.log('Valor de simbolo entrante ',simbol.valor);
 
@@ -44,10 +47,13 @@ export class Declaracion implements Instruccion{
                    
                     let nuevo = new Simbolo(simbol.simbolo, this.type, simbol.indentificador, valor);
                     tabla.agregar(simbol.indentificador, nuevo);
+                    RSimbolo.agregarSimbolo(simbol.indentificador, this.type.stype,valor,this.linea,this.columna);
+                    //console.log("Nuevo: ", simbol.indentificador, " ", this.type.stype," ", valor," ", this.linea," ", this.columna)
                 }
             }else{
                 let nuevoS = new Simbolo(simbol.simbolo, this.type, simbol.indentificador, simbol.valor.valor);
                 tabla.agregar(simbol.indentificador, nuevoS);
+                RSimbolo.agregarSimbolo(simbol.indentificador, this.type.stype,simbol.valor.valor,this.linea,this.columna);
             }
         }
         

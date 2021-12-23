@@ -3,6 +3,8 @@ import { Expresion } from "../Interfaces/Expresion";
 import { Simbolo } from "../TablaSimbolos/Simbolo";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import {Tipo, tipo} from "../TablaSimbolos/Tipo"
+import { RSimbolo } from "../TablaSimbolos/RSimbolos";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Arreglo implements Expresion{
     public type: Tipo;
@@ -45,6 +47,7 @@ export class Arreglo implements Expresion{
         //console.log("Tamaño del arreglo: " + tamArr);
         if(tabla.existeActual(this.id.indentificador)){
             console.log('Error semantico: Arreglo existe en entorno actual');
+            RErrores.agregarError("Semantico","arreglo existe en entorno actual",this.linea,this.columna)
             return;
         }else{
 
@@ -57,11 +60,14 @@ export class Arreglo implements Expresion{
                     this.valores.push(exp);
                 }else{
                     console.log("Tipo de dato diferente a la expresion");
+                    RErrores.agregarError("Semantico","tipo de dato diferente",this.linea,this.columna)
                     return;
                 }
             }
             let nuevoArr = new Simbolo(this.id.simbolo, this.type, this.id.indentificador, null, null, null, this.valores);
             tabla.agregar(this.id.indentificador, nuevoArr);
+            RSimbolo.agregarSimbolo(this.id.indentificador, this.type.stype,this.valores,this.linea,this.columna);
+            //RSimbolo.agregarSimbolo(simbol.indentificador, this.type.stype,valor,this.linea,this.columna);
             console.log("Se guardo el arreglo :) ", this.valores);
         }
 

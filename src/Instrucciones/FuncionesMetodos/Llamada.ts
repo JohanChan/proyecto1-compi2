@@ -6,6 +6,7 @@ import { TablaSimbolos } from "../../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../../TablaSimbolos/Tipo";
 import { Retonar } from "../SentenciaTransferencia/Retornar";
 import { Metodo } from "./Metodo";
+import { RErrores } from "../../TablaSimbolos/RErrores";
 
 export class Llamada implements Instruccion, Expresion {
     linea: number;
@@ -31,6 +32,7 @@ export class Llamada implements Instruccion, Expresion {
                 }
             }else{
                 console.log('No es el mismo metodo :c');
+                RErrores.agregarError("Semantico","No es el mismo metodo",this.linea,this.columna);
             }
         }else{
             console.log(this.identificador);

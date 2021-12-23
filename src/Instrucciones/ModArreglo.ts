@@ -5,6 +5,7 @@ import { Expresion } from "../Interfaces/Expresion";
 import { Instruccion } from "../Interfaces/Instruccion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class ModArreglo implements Instruccion{
 
@@ -35,6 +36,7 @@ export class ModArreglo implements Instruccion{
                 //console.log("Tamaño del arreglo a modificar " + tabla.getSimbolo(this.id).getTamArr());
                 if (pos >= tabla.getSimbolo(this.id).getTamArr()) {
                     console.log("El indice excede el tamaño del arreglo");
+                    RErrores.agregarError("Semantico","El indice excede el tamaño del arreglo",this.linea,this.columna)
                     return
                 }else{
                     tabla.getSimbolo(this.id).setValorArr(val,pos);
@@ -42,9 +44,11 @@ export class ModArreglo implements Instruccion{
                 }
             }else{
                 console.log('Error semantico: Tipo de dato no compatible');
+                RErrores.agregarError("Semantico","Tipo de dato no compatible",this.linea,this.columna)
             }
         }else{
             console.log('Arreglo no existe');
+            RErrores.agregarError("Semantico","Arreglo no existe",this.linea,this.columna)
         }
     }
 

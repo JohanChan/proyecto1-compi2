@@ -3,6 +3,7 @@ import { Expresion } from "../Interfaces/Expresion";
 import { TablaSimbolos } from "../TablaSimbolos/TablaSimbolos";
 import { tipo } from "../TablaSimbolos/Tipo";
 import {Temporal, Resultado3D} from "../TablaSimbolos/Temporales";
+import { RErrores } from "../TablaSimbolos/RErrores";
 
 export class Identificador implements Expresion{
     linea: number;
@@ -24,7 +25,8 @@ export class Identificador implements Expresion{
         if(idExiste != null){
             return idExiste.valor;
         }else{
-            console.log('Error semantico: no existe la variables ', idExiste, " ", this.linea, " ", this.columna);
+            console.log('Error semantico: no existe la variable ', idExiste, " ", this.linea, " ", this.columna);
+            RErrores.agregarError("Semantico","no existe la variable",this.linea,this.columna);
         }
     }
     
